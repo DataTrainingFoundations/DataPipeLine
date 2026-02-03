@@ -38,7 +38,7 @@ class DataExtractor:
             return None
         
     # Function to extract data from csv given the year/s
-    # How to call: DataExtractor.extract_from_csv_by_year([2009, 2010, 2011, ... , 2019])
+    # How to call: DataExtractor.extract_from_csv_by_year(2009, 2010, 2011, ... , 2019)
     def extract_from_csv_by_year(self, *args):
         # Returns list of data frames (requires pandas)
         data_frames = []
@@ -73,7 +73,7 @@ class DataExtractor:
                         for k, v in data.items():
                             v.append(row[index_map[k]])
             
-            return data
+            return pd.DataFrame(data)
         except Exception as e:
             print(f"Error streaming file: {e}")
             return None
