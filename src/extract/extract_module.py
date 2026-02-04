@@ -1,11 +1,5 @@
 import pandas as pd
 
-"""
-BASIC EXTRACTOR SO OTHER PARTS CAN BE WORKED ON
-FUNCTIONS WILL BE UPDATED WITH STREAMING TO RUN FASTER
-OTHER FUNCTIONS WILL BE ADDED AS WELL
-"""
-
 class DataExtractor:
 
     def __init__(self):
@@ -34,7 +28,6 @@ class DataExtractor:
             return None
         
     # Function to extract data from csv given the year/s
-    # How to call: DataExtractor.extract_from_csv_by_year(2009, 2010, 2011, ... , 2019)
     def extract_from_csv_by_year(self, *args):
         # Returns list of data frames (requires pandas)
         data_frames = []
