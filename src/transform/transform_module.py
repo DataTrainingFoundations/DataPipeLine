@@ -15,21 +15,24 @@ class DataTransformer:
         valid_rows = []
         rejected_rows = []
         for _, row in df.iterrows():
-            if row["play_type"] == "pass" or row["play_type"] == "run":
+            if (row["play_type"] == "pass" or row["play_type"] == "run"):
                 valid_rows.append(row)
             else:
                 rejected_rows.append(row)
         return pd.DataFrame(valid_rows), rejected_rows
             
     def clean(self, df: pd.DataFrame):
-        df["yards_gained"] = df["yards_gained"].astype(int)
-        df["rush_attempt"] = df["rush_attempt"].astype(int)
-        df["pass_attempt"] = df["pass_attempt"].astype(int)
-        df["touchdown"] = df["touchdown"].astype(int)
-        df["pass_touchdown"] = df["pass_touchdown"].astype(int)
-        df["rush_touchdown"] = df["rush_touchdown"].astype(int)
-        new_df = df[['play_type', 'yards_gained', 'rush_attempt', 'pass_attempt', 'touchdown', 'pass_touchdown', 'rush_touchdown']]
-        return new_df
+        
+            df["yards_gained"] = df["yards_gained"].fillna(0).astype(int)
+            df["rush_attempt"] = df["rush_attempt"].fillna(0).astype(int)
+            df["pass_attempt"] = df["pass_attempt"].fillna(0).astype(int)
+            df["touchdown"] = df["touchdown"].fillna(0).astype(int)
+            df["pass_touchdown"] = df["pass_touchdown"].fillna(0).astype(int)
+            df["rush_touchdown"] = df["rush_touchdown"].fillna(0).astype(int)
+            new_df = df[['play_type', 'yards_gained', 'rush_attempt', 'pass_attempt', 'touchdown', 'pass_touchdown', 'rush_touchdown']]
+            return new_df
+  
+
 
 
 
