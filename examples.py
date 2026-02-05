@@ -2,6 +2,8 @@
 import time
 import logging
 import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
 from src.extract.extract_module import DataExtractor
 from src.transform.transform_module import DataTransformer
 
@@ -37,13 +39,26 @@ def main():
     #     year += 1
     
     clean_dfs = [transformer.clean(df) for df in valid_dfs]
-
     year = 0
+    sum_rows = []
     for df in clean_dfs:
-        print(f"{years[year]} Data:")
-        print(f"Total passes: {sum(df['pass_attempt'])}")
-        print(f"Total rushes: {sum(df['rush_attempt'])}")
+        totals = df[['pass_attempt', 'rush_attempt']].sum()
+        totals['year'] = years[year]
+        sum_rows.append(totals)
         year += 1
+
+    data_set = pd.DataFrame(sum_rows).reset_index(drop=True)
+    dfm = data_set.melt('year', var_name= 'play_type', value_name= 'total')
+    print(data_set)
+    sns.relplot(
+     data = dfm, kind = 'line', x = 'year', y = 'total', hue="play_type"
+    )
+
+    plt.show()
+
+    
+
+    
     
 
 
