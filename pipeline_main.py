@@ -11,7 +11,7 @@ test_data = DataExtractor.extract_data(file_path)
 #transform
 
 valid, rejected = DataTransformer.validate(test_data)
-
+print(rejected.head())
 cleaned = DataTransformer.clean(valid)
 
 team_data = DataTransformer.team_stats(cleaned)
