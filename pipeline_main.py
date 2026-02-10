@@ -30,3 +30,6 @@ load = DataLoader()
 team_table = 'Team_Stats'
 
 load.create_table(df=team_data, table_name=team_table, primary_key="team_id")
+
+load.insert_rows(df=team_data, table_name='Team_Stats')
+

@@ -10,7 +10,7 @@ class DataLoader:
     def __init__(self):
         self.engine = get_engine()
 
-
+    @staticmethod
     def map_dtype_to_pg(dtype):
         if "int" in str(dtype):
             return "BIGINT"
@@ -33,7 +33,7 @@ class DataLoader:
 
         # Add auto-increment primary key column
         if primary_key:
-            columns.append(f"{primary_key} BIGSERIAL PRIMARY KEY")
+            columns.append(f"{primary_key} BIGINT AUTO_INCREMENT PRIMARY KEY")
 
         # Add DataFrame columns
         for col, dtype in zip(df.columns, df.dtypes):
