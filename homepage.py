@@ -19,8 +19,6 @@ load = DataLoader()
 
 # TO DO:
 #     ADD charts
-#     Make load data button actually work
-#     Transform datframes
 #     Toggle for single season data or multi-year data
 
 
