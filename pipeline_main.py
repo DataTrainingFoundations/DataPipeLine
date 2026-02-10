@@ -2,6 +2,7 @@
 import pandas as pd
 from src.extract.extract_module import DataExtractor
 from src.transform.transform_module import DataTransformer
+from src.load.load_module import DataLoader
 
 #extract
 
@@ -20,8 +21,12 @@ team_data = DataTransformer.team_stats(cleaned)
 
 print(f"2009 total pass attempts: {sum(team_data['pass_attempts'])}")
 print(f"2009 total rush attempts: {sum(team_data['rush_attempts'])}")
+print(team_data.info())
+
 #load
 
+load = DataLoader()
 
+team_table = 'Team_Stats'
 
-
+load.create_table(df=team_data, table_name=team_table, primary_key="team_id")
