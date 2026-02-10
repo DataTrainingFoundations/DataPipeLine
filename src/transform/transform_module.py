@@ -12,7 +12,7 @@ rush_touchdown: ER
 """
 class DataTransformer:
 
-    #Validates the rows to add only pass and run play types
+    # Validates the rows to add only pass and run play types
     def validate(df: pd.DataFrame):
         valid_rows = []
         rejected_rows = []
@@ -24,9 +24,10 @@ class DataTransformer:
                 rejected_rows.append(row)
         return pd.DataFrame(valid_rows), pd.DataFrame(rejected_rows)
     
-    #Cleans the code by converting the attributes to int and returns a new DataFrame with these specific columns
+    # Cleans the code by dropping any NA's and converting the attributes to int
+    # Returns a new DataFrame with these specific columns
     def clean(df: pd.DataFrame):
-        df["yards_gained"] = df["yards_gained"].astype(int)
+        df["yards_gained"] = df["yards_gained"].dropna().astype(int)
         df["rush_attempt"] = df["rush_attempt"].astype(int)
         df["pass_attempt"] = df["pass_attempt"].astype(int)
         df["touchdown"] = df["touchdown"].astype(int)
@@ -35,7 +36,7 @@ class DataTransformer:
         new_df = df[['posteam', 'play_type', 'yards_gained', 'rush_attempt', 'pass_attempt', 'touchdown', 'pass_touchdown', 'rush_touchdown']]
         return new_df
     
-    #Gets the team stats for every NFL team
+    # Gets the team stats for every NFL team
     def team_stats(season_data):
         season_data['pass_yards'] = season_data['yards_gained'] * season_data['pass_attempt']
         season_data['rush_yards'] = season_data['yards_gained'] * season_data['rush_attempt']

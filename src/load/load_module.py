@@ -24,23 +24,21 @@ class DataLoader:
             return "TEXT"
 
 
-    def create_table(self, df: pd.DataFrame, table_name: str, primary_key: str = "id"):
+    def create_(self, df: pd.DataFrame, table_name: str, primary_key: str = "id"):
         if df is None or df.empty:
             logger.error(f"Cannot create table '{table_name}': DataFrame is empty or None")
             raise ValueError("DataFrame is empty or None")
 
         columns = []
 
-        # Add auto-increment primary key column
-        if primary_key:
-            columns.append(f"{primary_key} BIGINT AUTO_INCREMENT PRIMARY KEY")
-
-        # Add DataFrame columns
+        # Add DataFrame columns Primary Key passed in
         for col, dtype in zip(df.columns, df.dtypes):
+            sql_type = self.map_dtype_to_pg(dtype)
+
             if col == primary_key:
-                continue  # skip if same name as PK
-            col_def = f"{col} {self.map_dtype_to_pg(dtype)}"
-            columns.append(col_def)
+                columns.append(f"{col} {sql_type} PRIMARY KEY")
+            else:
+                columns.append(f"{col} {sql_type}")
 
         sql = f"CREATE TABLE IF NOT EXISTS {table_name} ({', '.join(columns)});"
 
@@ -53,36 +51,39 @@ class DataLoader:
             raise
 
 
-    def insert_rows(self, df: pd.DataFrame, table_name: str):
-
+    def merge_(self, df: pd.DataFrame, table_name: str, primary_key: str):
         if df is None or df.empty:
-            logger.error(f"Cannot insert into '{table_name}': DataFrame is empty or None")
+            logger.error(f"Cannot upsert into '{table_name}': DataFrame is empty or None")
             raise ValueError("DataFrame is empty or None")
 
-        try:
-            df.to_sql(
-                table_name,
-                self.engine,
-                if_exists="append",
-                index=False,
-                method="multi"
-            )
-            logger.info(f"Inserted {len(df)} rows into '{table_name}' successfully.")
-        except Exception as e:
-            logger.error(f"Failed to insert rows into '{table_name}': {e}")
-            raise
-    
-    def update_rows(self, table_name: str, set_clause: str, condition: str):
+        columns = list(df.columns)
+        placeholders = ", ".join([f":{c}" for c in columns])
 
-        sql = f"""
-        UPDATE {table_name}
-        SET {set_clause}
-        WHERE {condition}
+        update_clause = ", ".join(
+            [f"{c}=VALUES({c})" for c in columns if c != primary_key]
+        )
+        sql = f""" INSERT INTO {table_name} ({', '.join(columns)})
+        VALUES ({placeholders})
+        ON DUPLICATE KEY UPDATE {update_clause};
         """
+
+        records = df.to_dict(orient="records")
+
         try:
             with self.engine.begin() as conn:
-                conn.execute(text(sql))
-            logger.info(f"Updated rows in '{table_name}' where {condition} successfully.")
+                conn.execute(text(sql), records)
+            logger.info(f"Upserted {len(df)} rows into '{table_name}' successfully.")
         except Exception as e:
-            logger.error(f"Failed to update rows in '{table_name}': {e}")
+            logger.error(f"Failed to upsert rows into '{table_name}': {e}")
             raise
+
+
+    def drop_(self, table_name: str):
+        try:
+            with self.engine.begin() as conn:
+                conn.execute(text(f"DROP TABLE IF EXISTS {table_name};"))
+            logger.info(f"Table '{table_name}' dropped successfully.")
+        except Exception as e:
+            logger.error(f"Failed to drop table '{table_name}': {e}")
+            raise
+
