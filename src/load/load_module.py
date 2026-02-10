@@ -4,6 +4,9 @@ from src.db.engine import get_engine
 
 
 class DataLoader:
+    def __init__(self):
+        self.engine = get_engine()
+
 
     def map_dtype_to_pg(dtype):
         if "int" in str(dtype):
@@ -18,19 +21,24 @@ class DataLoader:
             return "TEXT"
 
 
-    def create_table(self, df: pd.DataFrame, table_name: str, primary_key: str = None):
-
+    def create_table(self, df: pd.DataFrame, table_name: str, primary_key: str = "id"):
         if df is None or df.empty:
             raise ValueError("DataFrame is empty or None")
 
         columns = []
+
+        # Add auto-increment primary key column
+        if primary_key:
+            columns.append(f"{primary_key} BIGSERIAL PRIMARY KEY")
+
+        # Add DataFrame columns
         for col, dtype in zip(df.columns, df.dtypes):
+            if col == primary_key:
+                continue  # skip if same name as PK
             col_def = f"{col} {self.map_dtype_to_pg(dtype)}"
-            if primary_key and col == primary_key:
-                col_def += " PRIMARY KEY"
             columns.append(col_def)
 
-        sql = f"""CREATE TABLE IF NOT EXISTS {table_name} ({', '.join(columns)});"""
+        sql = f"CREATE TABLE IF NOT EXISTS {table_name} ({', '.join(columns)});"
 
         with get_engine().begin() as conn:
             conn.execute(text(sql))
