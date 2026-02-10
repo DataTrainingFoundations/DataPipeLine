@@ -1,6 +1,9 @@
 import pandas as pd
+import logging
 from sqlalchemy import text
 from src.db.engine import get_engine
+
+logger = logging.getLogger(__name__)
 
 
 class DataLoader:
@@ -23,6 +26,7 @@ class DataLoader:
 
     def create_table(self, df: pd.DataFrame, table_name: str, primary_key: str = "id"):
         if df is None or df.empty:
+            logger.error(f"Cannot create table '{table_name}': DataFrame is empty or None")
             raise ValueError("DataFrame is empty or None")
 
         columns = []
@@ -40,22 +44,33 @@ class DataLoader:
 
         sql = f"CREATE TABLE IF NOT EXISTS {table_name} ({', '.join(columns)});"
 
-        with get_engine().begin() as conn:
-            conn.execute(text(sql))
+        try:
+            with self.engine.begin() as conn:
+                conn.execute(text(sql))
+            logger.info(f"Table '{table_name}' created successfully.")
+        except Exception as e:
+            logger.error(f"Failed to create table '{table_name}': {e}")
+            raise
 
 
     def insert_rows(self, df: pd.DataFrame, table_name: str):
 
         if df is None or df.empty:
+            logger.error(f"Cannot insert into '{table_name}': DataFrame is empty or None")
             raise ValueError("DataFrame is empty or None")
 
-        df.to_sql(
-            table_name,
-            get_engine(),
-            if_exists="append",
-            index=False,
-            method="multi"
-        )
+        try:
+            df.to_sql(
+                table_name,
+                self.engine,
+                if_exists="append",
+                index=False,
+                method="multi"
+            )
+            logger.info(f"Inserted {len(df)} rows into '{table_name}' successfully.")
+        except Exception as e:
+            logger.error(f"Failed to insert rows into '{table_name}': {e}")
+            raise
     
     def update_rows(self, table_name: str, set_clause: str, condition: str):
 
@@ -64,6 +79,10 @@ class DataLoader:
         SET {set_clause}
         WHERE {condition}
         """
-
-        with get_engine().begin() as conn:
-            conn.execute(text(sql))
+        try:
+            with self.engine.begin() as conn:
+                conn.execute(text(sql))
+            logger.info(f"Updated rows in '{table_name}' where {condition} successfully.")
+        except Exception as e:
+            logger.error(f"Failed to update rows in '{table_name}': {e}")
+            raise
