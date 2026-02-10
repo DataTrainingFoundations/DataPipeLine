@@ -1,12 +1,13 @@
 import streamlit as st
 from src.extract.extract_module import DataExtractor
 from src.transform.transform_module import DataTransformer
+from src.load.load_module import DataLoader
 from dotenv import load_dotenv
 import os
 import json
 
 load_dotenv()
-
+load = DataLoader()
 
 # To run need this line in your .env file
 
@@ -29,6 +30,9 @@ col1, col2 = st.columns([1,3], border = True)
 if 'loaded_dfs' not in st.session_state:
     st.session_state['loaded_dfs'] = []
 
+if 'cleaned' not in st.session_state:
+    st.session_state['cleaned'] = False
+
 @st.cache_data
 def extract_data(fixed_cols, years):
     return DataExtractor.extract_multiple_files_by_cols(fixed_cols, *years)
@@ -43,8 +47,12 @@ def clean_data(dfs):
     
     return cleaned_dfs
 
-def load_data():
-    pass
+def load_data(dfs, years):
+    for i, df in enumerate(dfs):
+        table_name = f'{years[i]}_team_stats'
+        load.create_(df = df, table_name = table_name, primary_key = 'posteam')
+        load.insert_(df = df, table_name= table_name, primary_key='posteam')
+
 
 with col1:
 
@@ -61,13 +69,16 @@ with col1:
     if st.button('Extract data'):
         season_dataframes = extract_data(cols, years)
         st.session_state.loaded_dfs = season_dataframes
+        st.session_state.cleaned = False
+
 
     if st.button('Clean data') and st.session_state.loaded_dfs:
         team_stats = clean_data(st.session_state.loaded_dfs)
         st.session_state.loaded_dfs = team_stats
+        st.session_state.cleaned = True
 
-    if st.button('Load data to database') and st.session_state.loaded_dfs:
-        pass
+    if st.button('Load data to database') and st.session_state.loaded_dfs and st.session_state.cleaned:
+        load_data(st.session_state.loaded_dfs, years)
 
 with col2:
 

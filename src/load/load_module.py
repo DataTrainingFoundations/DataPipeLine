@@ -21,7 +21,7 @@ class DataLoader:
         elif "datetime" in str(dtype):
             return "TIMESTAMP"
         else:
-            return "TEXT"
+            return "VARCHAR(50)"
 
 
     def create_(self, df: pd.DataFrame, table_name: str, primary_key: str = "id"):
@@ -51,7 +51,7 @@ class DataLoader:
             raise
 
 
-    def merge_(self, df: pd.DataFrame, table_name: str, primary_key: str):
+    def insert_(self, df: pd.DataFrame, table_name: str, primary_key: str):
         if df is None or df.empty:
             logger.error(f"Cannot upsert into '{table_name}': DataFrame is empty or None")
             raise ValueError("DataFrame is empty or None")
