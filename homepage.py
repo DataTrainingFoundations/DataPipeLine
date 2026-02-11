@@ -1,4 +1,6 @@
 import streamlit as st
+import matplotlib.pyplot as plt
+import pandas as pd
 from src.extract.extract_module import DataExtractor
 from src.transform.transform_module import DataTransformer
 from src.load.load_module import DataLoader
@@ -31,6 +33,14 @@ if 'loaded_dfs' not in st.session_state:
 if 'cleaned' not in st.session_state:
     st.session_state['cleaned'] = False
 
+if 'sort_column' not in st.session_state:
+    st.session_state['sort_column'] = None
+
+if 'option' not in st.session_state:
+    st.session_state['option'] = None
+if 'current_fig' not in st.session_state:
+    st.session_state['current_fig'] = None
+
 @st.cache_data
 def extract_data(fixed_cols, years):
     return DataExtractor.extract_multiple_files_by_cols(fixed_cols, *years)
@@ -51,6 +61,107 @@ def load_data(dfs, years):
         load.create_(df = df, table_name = table_name, primary_key = 'posteam')
         load.insert_(df = df, table_name= table_name, primary_key='posteam')
 
+def reset_sorted():
+    st.session_state.sort_column = None
+
+def build_bar_chart(df, y_cols, title):
+    fig, ax = plt.subplots(figsize=(10, 4.5))
+
+    x = range(len(df))
+    width = 0.4
+
+    ax.bar(
+        [i - width/2 for i in x],
+        df[y_cols[0]],
+        width,
+        label=y_cols[0],
+        color='blue'
+    )
+
+    ax.bar(
+        [i + width/2 for i in x],
+        df[y_cols[1]],
+        width,
+        label=y_cols[1],
+        color='orange'
+    )
+
+    ax.set_xticks(x)
+    ax.set_xticklabels(df['posteam'], rotation=45, ha='right')
+    ax.set_title(title)
+    ax.legend()
+
+    plt.tight_layout()
+
+    return fig
+
+
+def show_team_data():
+    option = st.session_state['option']
+    tab1, tab2 = st.tabs(['Dataframe', 'Charts'])
+    season_map = {year:df for year,df in zip(years, st.session_state.loaded_dfs)}
+    df = season_map[option]
+    tab1.dataframe(data = df, width = 'content')
+                
+    with tab2:
+        sort_col1, sort_col2, _ = st.columns([2.5, 2.5, 10], gap = 'xxsmall')
+        if sort_col1.button("Sort by Pass Yards"):
+            st.session_state.sort_column = 'pass_yards'
+
+        if sort_col2.button("Sort by Rush Yards"):
+            st.session_state.sort_column = 'rush_yards'
+
+        if st.session_state.get('sort_column'):
+            df = df.sort_values(by=st.session_state.sort_column,ascending=False)
+
+        tab21, tab22 = st.tabs(['Pass v Rush Yards','Pass Attempts vs Rush Attempts'])
+
+        with tab21:
+            fig1 = build_bar_chart(
+                df,
+                ['pass_yards', 'rush_yards'],
+                'Pass Yards vs Rush Yards'
+            )
+            st.session_state.current_fig = fig1
+            st.pyplot(st.session_state.current_fig)
+
+        with tab22:
+            fig2 = build_bar_chart(
+                df,
+                ['pass_attempts', 'rush_attempts'],
+                'Pass Attempts vs Rush Attempts'
+            )
+            st.pyplot(fig2)
+
+
+
+def show_year_data():
+    season_map = {year:df for year,df in zip(years, st.session_state.loaded_dfs)}
+    
+    rows = []
+
+    for year, df in season_map.items():
+        rows.append({
+            'season' : year,
+            'pass_attempts' : int(df['pass_attempts'].astype('Int64').sum()),
+            'rush_attempts' : int(df['rush_attempts'].astype('Int64').sum())
+        })
+
+    yearly = pd.DataFrame(rows).sort_values('season')
+
+    fig, ax = plt.subplots(figsize=(12, 4.5))
+    ax.plot(yearly['season'], yearly['pass_attempts'], label='Pass Attempts')
+    ax.plot(yearly['season'], yearly['rush_attempts'], label='Rush Attempts')
+
+    ax.set_title('NFL Pass vs Rush Attempts Over Time')
+    ax.set_xlabel('Season')
+    ax.set_ylabel('Attempts')
+    ax.legend()
+    ax.grid(alpha=0.3)
+
+    st.pyplot(fig)
+
+
 
 with col1:
 
@@ -63,6 +174,8 @@ with col1:
 
     year_range = list(st.select_slider('Select the range of years you\'d like to analyze', options = range(2009, 2020), value = (2009, 2019)))
     years = list(range(year_range[0], year_range[1] + 1))
+    if st.session_state.get('option')not in years:
+        st.session_state.option = years[0]
 
     if st.button('Extract data'):
         season_dataframes = extract_data(cols, years)
@@ -89,14 +202,15 @@ with col2:
         if st.session_state.loaded_dfs:
 
             if year_data:
-                option = st.selectbox('What dataframe would you like to view?', tuple(years))
-                tab1, tab2 = st.tabs(['Charts', 'Dataframe'])
-                season_map = {year:df for year,df in zip(years, st.session_state.loaded_dfs)}
-                tab2.dataframe(data = season_map[option], width = 'content')
+                if st.session_state.cleaned:
+                    st.selectbox('What dataframe would you like to view?', tuple(years), key = 'option', on_change=reset_sorted)
+                    show_team_data()
+                else:
+                    st.subheader("Please clean the data first")
             else:
                 st.subheader(f"Stats from {years[0]}-{years[len(years) - 1]}", divider = 'gray')
-                #display data over seasons
-                pass
+                show_year_data()
+
     except Exception as e:
         print(f"No dataframe extracted: {e}")
 
