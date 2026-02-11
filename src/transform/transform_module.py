@@ -19,6 +19,8 @@ class DataTransformer:
         
         for _, row in df.iterrows():
             if (row["play_type"] == "pass" or row["play_type"] == "run"):
+                if (row["posteam"] == "JAC"):
+                    row["posteam"] = "JAX"
                 valid_rows.append(row)
             else:
                 rejected_rows.append(row)
