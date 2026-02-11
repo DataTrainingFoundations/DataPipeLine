@@ -1,5 +1,6 @@
 import streamlit as st
 import matplotlib.pyplot as plt
+import seaborn as sns
 import pandas as pd
 from src.extract.extract_module import DataExtractor
 from src.transform.transform_module import DataTransformer
@@ -104,19 +105,20 @@ def show_team_data():
     tab1.dataframe(data = df, width = 'content')
                 
     with tab2:
-        sort_col1, sort_col2, _ = st.columns([2.5, 2.5, 10], gap = 'xxsmall')
-        if sort_col1.button("Sort by Pass Yards"):
-            st.session_state.sort_column = 'pass_yards'
 
-        if sort_col2.button("Sort by Rush Yards"):
-            st.session_state.sort_column = 'rush_yards'
-
-        if st.session_state.get('sort_column'):
-            df = df.sort_values(by=st.session_state.sort_column,ascending=False)
-
-        tab21, tab22 = st.tabs(['Pass v Rush Yards','Pass Attempts vs Rush Attempts'])
+        tab21, tab22, tab23, tab24 = st.tabs(['Pass v Rush Yards','Pass Attempts vs Rush Attempts', 'Correlation Matrix', 'Scatter Plots'])
 
         with tab21:
+            sort_col1, sort_col2, _ = st.columns([2.5, 2.5, 10], gap = 'xxsmall')
+            if sort_col1.button("Sort by Pass Yards"):
+                st.session_state.sort_column = 'pass_yards'
+
+            if sort_col2.button("Sort by Rush Yards"):
+                st.session_state.sort_column = 'rush_yards'
+
+            if st.session_state.get('sort_column'):
+                df = df.sort_values(by=st.session_state.sort_column,ascending=False)
+
             fig1 = build_bar_chart(
                 df,
                 ['pass_yards', 'rush_yards'],
@@ -133,25 +135,46 @@ def show_team_data():
             )
             st.pyplot(fig2)
 
+        with tab23:
+            corr = df[['pass_yards', 'pass_touchdowns', 'pass_attempts', 'rush_yards', 'rush_touchdowns', 'rush_attempts']].corr()
+            corr_squared = corr ** 2
+            fig3, ax3 = plt.subplots(figsize=(5, 4))
+            sns.heatmap(
+                corr_squared,
+                annot=True,
+                cmap='coolwarm',
+                fmt=".2f",
+                ax=ax3,
+                annot_kws={'fontsize': 8},
+                cbar_kws={"shrink": 0.8},
+                square=True
+            )
+            ax3.tick_params(axis='x', labelsize=8, rotation=45)
+            ax3.tick_params(axis='y', labelsize=8)
 
+            ax3.set_title("Correlation Matrix", fontsize=10)
+            st.pyplot(fig3)
+        
+        with tab24:
+            pass
 
 def show_year_data():
     season_map = {year:df for year,df in zip(years, st.session_state.loaded_dfs)}
     
-    rows = []
+    attempts_rows = []
 
     for year, df in season_map.items():
-        rows.append({
+        attempts_rows.append({
             'season' : year,
             'pass_attempts' : int(df['pass_attempts'].astype('Int64').sum()),
             'rush_attempts' : int(df['rush_attempts'].astype('Int64').sum())
         })
 
-    yearly = pd.DataFrame(rows).sort_values('season')
+    yearly_attempts = pd.DataFrame(attempts_rows).sort_values('season')
 
     fig, ax = plt.subplots(figsize=(12, 4.5))
-    ax.plot(yearly['season'], yearly['pass_attempts'], label='Pass Attempts')
-    ax.plot(yearly['season'], yearly['rush_attempts'], label='Rush Attempts')
+    ax.plot(yearly_attempts['season'], yearly_attempts['pass_attempts'], label='Pass Attempts')
+    ax.plot(yearly_attempts['season'], yearly_attempts['rush_attempts'], label='Rush Attempts')
 
     ax.set_title('NFL Pass vs Rush Attempts Over Time')
     ax.set_xlabel('Season')
@@ -161,6 +184,29 @@ def show_year_data():
 
     st.pyplot(fig)
 
+    yards_rows = []
+
+    for year, df in season_map.items():
+        yards_rows.append({
+            'season' : year,
+            'pass_yards' : int(df['pass_yards'].astype('Int64').sum()),
+            'rush_yards' : int(df['rush_yards'].astype('Int64').sum())
+        })
+
+    yearly_yards = pd.DataFrame(yards_rows).sort_values('season')
+
+    fig2, ax2 = plt.subplots(figsize=(12, 4.5))
+    ax2.plot(yearly_yards['season'], yearly_yards['pass_yards'], label='Pass Yards')
+    ax2.plot(yearly_yards['season'], yearly_yards['rush_yards'], label='Rush Yards')
+
+    ax2.set_title('NFL Pass vs Rush Yards Over Time')
+    ax2.set_xlabel('Season')
+    ax2.set_ylabel('Yards')
+    ax2.legend()
+    ax2.grid(alpha=0.3)
+
+    st.pyplot(fig2)
+
 
 
 with col1:
@@ -168,8 +214,8 @@ with col1:
     cols_string = os.getenv('USED_COLS')
     cols = cols_string.split('|')
 
-    st.title('RUN vs PASS', text_alignment = 'center')
-    st.subheader('An analysis on the NFL', text_alignment = 'center')  
+    st.title('RUN vs PASS', text_alignment = 'center', anchor=False)
+    st.subheader('An analysis on the NFL', text_alignment = 'center', anchor=False)  
     st.divider(width = 'stretch')
 
     year_range = list(st.select_slider('Select the range of years you\'d like to analyze', options = range(2009, 2020), value = (2009, 2019)))
