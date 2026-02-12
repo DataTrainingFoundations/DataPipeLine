@@ -1,5 +1,7 @@
 import pandas as pd
 
+"""Transforms the extracted data for the players"""
+
 class DataTransformerPlayers:
 
     def validate(self, df: pd.DataFrame):
@@ -16,5 +18,19 @@ class DataTransformerPlayers:
         return pd.DataFrame(valid_rows), pd.DataFrame(rejected_rows).fillna('Null')
 
     def clean(self, df: pd.DataFrame):
+        """Cleans the code by dropping any NA's and converting the attributes to int
+        Returns a new DataFrame with these specific columns"""
+        df["completions"] = df["completions"].dropna().astype(int)
+        df["attempts"] = df["attempts"].dropna().astype(int)
+        df["passing_yards"] = df["passing_yards"].dropna().astype(int)
+        df["passing_tds"] = df["passing_tds"].dropna().astype(int)
+        df["carries"] = df["carries"].dropna().astype(int)
+        df["rushing_yards"] = df["rushing_yards"].dropna().astype(int)
+        df["rushing_tds"] = df["rushing_tds"].dropna().astype(int)
+        df["receptions"] = df["receptions"].dropna().astype(int)
+        df["targets"] = df["targets"].dropna().astype(int)
+        df["receiving_yards"] = df["receiving_yards"].dropna().astype(int)
+        df["receiving_tds"] = df["receiving_tds"].dropna().astype(int)
+        new_df = df[['player_name', 'position', 'team', 'completions', 'attempts', 'passing_yards', 'passing_tds', 'carries', 'rushing_yards', 'rushing_tds', 'receptions', 'targets', 'receiving_yards', 'receiving_tds']]
+        return new_df
         
-        pass
