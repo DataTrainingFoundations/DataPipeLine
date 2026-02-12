@@ -1,7 +1,7 @@
 #imports
 """Data Pipeline Module handles and exceutes Extraction, Transformation, and Load processes"""
 from src.extract.extract_module import DataExtractor
-from src.transform.transform_module import DataTransformer
+from src.transform.transform_module_team import DataTransformer
 from src.load.load_module import DataLoader
 
 #instantiate pipelines

@@ -11,7 +11,7 @@ touchdown: EP
 pass_touchdown: EQ
 rush_touchdown: ER
 """
-class DataTransformer:
+class DataTransformerTeam:
 
     def validate(self, df: pd.DataFrame):
         """ Validates the rows to add only pass and run play types"""
