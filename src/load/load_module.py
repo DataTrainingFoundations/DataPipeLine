@@ -92,6 +92,7 @@ class DataLoader:
         except Exception as e:
             logger.error("Failed to insert rows into '%s': '%s'", table_name,e)
             raise
+        
     def drop_(self, table_names):
         """
         Drops one or more tables.

@@ -4,18 +4,23 @@ from src.extract.extract_module import DataExtractor
 from src.transform.transform_module import DataTransformer
 from src.load.load_module import DataLoader
 
+#instantiate pipelines
+extract = DataExtractor()
+transform = DataTransformer()
+load = DataLoader()
+
 #extract
 
 FILE_PATH = "https://raw.githubusercontent.com/ryurko/nflscrapR-data/refs/heads/master/play_by_play_data/regular_season/reg_pbp_2009.csv"
-test_data = DataExtractor.extract_data(FILE_PATH)
+test_data = extract.extract_data(FILE_PATH)
 
 #transform
 
-valid, rejected = DataTransformer.validate(test_data)
+valid, rejected = transform.validate(test_data)
 print(rejected.head())
-cleaned = DataTransformer.clean(valid)
+cleaned = transform.clean(valid)
 
-team_data = DataTransformer.team_stats(cleaned)
+team_data = transform.team_stats(cleaned)
 
 #print(team_data)
 
@@ -25,7 +30,6 @@ print(team_data.info())
 
 #load
 
-load = DataLoader()
 
 TEAM_TABLE = 'Team_Stats'
 REJECTED_TABLE = 'Rejected'
