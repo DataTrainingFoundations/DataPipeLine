@@ -12,8 +12,9 @@ pass_touchdown: EQ
 rush_touchdown: ER
 """
 class DataTransformerTeam:
-
-    def validate(self, df: pd.DataFrame):
+    """Module to handle dataframe transformation"""
+    @staticmethod
+    def validate(df: pd.DataFrame):
         """ Validates the rows to add only pass and run play types"""
         valid_rows = []
         rejected_rows = []
@@ -27,9 +28,8 @@ class DataTransformerTeam:
                 rejected_rows.append(row)
                 
         return pd.DataFrame(valid_rows), pd.DataFrame(rejected_rows).fillna('Null')
-
     
-    
+    @staticmethod
     def clean(self, df: pd.DataFrame):
         """Cleans the code by dropping any NA's and converting the attributes to int
         Returns a new DataFrame with these specific columns"""
@@ -41,8 +41,8 @@ class DataTransformerTeam:
         df["rush_touchdown"] = df["rush_touchdown"].astype(int)
         new_df = df[['posteam', 'play_type', 'yards_gained', 'rush_attempt', 'pass_attempt', 'touchdown', 'pass_touchdown', 'rush_touchdown']]
         return new_df
-
-    def team_stats(self, season_data):
+    @staticmethod
+    def team_stats(season_data):
         """Gets the team stats for every NFL team"""
         season_data['pass_yards'] = season_data['yards_gained'] * season_data['pass_attempt']
         season_data['rush_yards'] = season_data['yards_gained'] * season_data['rush_attempt']
@@ -59,9 +59,3 @@ class DataTransformerTeam:
                 )
 
         return stats
-  
-
-
-
-
-

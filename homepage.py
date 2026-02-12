@@ -11,7 +11,9 @@ import os
 import json
 
 load_dotenv()
+extract = DataExtractor()
 load = DataLoader()
+
 
 # To run need this line in your .env file
 

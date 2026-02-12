@@ -10,12 +10,13 @@ logging.basicConfig(filename = "records.log",
                     filemode = 'a')
 
 class DataExtractor:
+    """Module to handle extracting sources"""
 
     def __init__(self):
         pass
 
-
-    def extract_data(self, file_path):
+    @staticmethod
+    def extract_data(file_path):
         """Function to extract data from csv or json"""
         if '.csv' in file_path:
             try:
@@ -40,8 +41,8 @@ class DataExtractor:
         else:
             print('File not in json or csv format')
             return None
-
-    def extract_from_csv_by_cols(self, file_path, columns):
+    @staticmethod
+    def extract_from_csv_by_cols(file_path, columns):
         """Function to extract certain columns of data"""
         try:
             # Returns data as a data frame object (requires pandas)
@@ -52,8 +53,8 @@ class DataExtractor:
             return None
         finally:
             logging.debug("%s finished extracting", file_path)
-
-    def extract_multiple_files(self, *args):
+    @staticmethod
+    def extract_multiple_files(*args):
         """Function to read multiple files"""
         files = [f"https://raw.githubusercontent.com/ryurko/nflscrapR-data/refs/heads/master/play_by_play_data/regular_season/reg_pbp_{int(year)}.csv" for year in args]
 
@@ -62,8 +63,8 @@ class DataExtractor:
 
         return data_frames
 
-
-    def extract_multiple_files_by_cols(self, fixed_columns, *args):
+    @staticmethod
+    def extract_multiple_files_by_cols(fixed_columns, *args):
         """Function to extact multiple files, by column name"""
         partialfn = partial(DataExtractor.extract_from_csv_by_cols, columns = fixed_columns)
 
