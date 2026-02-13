@@ -3,7 +3,7 @@ import streamlit as st
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
-from src.extract.extract_module import DataExtractor
+from src.extract.nflreadpy_extract import *
 from src.transform.transform_module_team import DataTransformerTeam
 from src.load.load_module import DataLoader
 from dotenv import load_dotenv
@@ -11,22 +11,11 @@ import os
 import json
 
 load_dotenv()
-extract = DataExtractor()
 load = DataLoader()
-
-
-# To run need this line in your .env file
-
-# USED_COLS=posteam|play_type|yards_gained|rush_attempt|pass_attempt|touchdown|pass_touchdown|rush_touchdown
 
 # Simple streamlit homepage to look at dataframes
 
 # In terminal call 'streamlit run homepage.py'
-
-# TO DO:
-#     ADD charts
-#     Toggle for single season data or multi-year data
-
 
 st.set_page_config(layout="wide")
 col1, col2 = st.columns([1,3], border = True)
@@ -46,8 +35,8 @@ if 'current_fig' not in st.session_state:
     st.session_state['current_fig'] = None
 
 @st.cache_data
-def extract_data(fixed_cols, years):
-    return DataExtractor.extract_multiple_files_by_cols(fixed_cols, *years)
+def extract_data(years):
+    return get_multiple_pbp(*years)
 
 @st.cache_data
 def clean_data(dfs):
@@ -58,6 +47,15 @@ def clean_data(dfs):
         cleaned_dfs.append(DataTransformerTeam.team_stats(clean))
     
     return cleaned_dfs
+
+@st.cache_data
+def extract_and_clean(years):
+    cleaned_dfs = []
+    for year in years:
+        df = get_pbp(year)
+        valid, rejected = DataTransformerTeam.validate(df)
+        clean = DataTransformerTeam.clean(valid)
+        cleaned_dfs.append(DataTransformerTeam.team_stats(clean))
 
 def load_data(dfs, years):
     for i, df in enumerate(dfs):
@@ -214,26 +212,27 @@ def show_year_data():
 
 with col1:
 
-    cols_string = os.getenv('USED_COLS')
-    cols = cols_string.split('|')
-
     st.title('RUN vs PASS', text_alignment = 'center', anchor=False)
     st.subheader('An analysis on the NFL', text_alignment = 'center', anchor=False)  
     st.divider(width = 'stretch')
 
-    year_range = list(st.select_slider('Select the range of years you\'d like to analyze', options = range(2009, 2020), value = (2009, 2019)))
+    year_range = list(st.select_slider('Select the range of years you\'d like to analyze', options = range(1999, 2026), value = (1999, 2025)))
     years = list(range(year_range[0], year_range[1] + 1))
     if st.session_state.get('option')not in years:
         st.session_state.option = years[0]
 
     if st.button('Extract data'):
-        season_dataframes = extract_data(cols, years)
+        season_dataframes = extract_data(years)
         st.session_state.loaded_dfs = season_dataframes
         st.session_state.cleaned = False
 
-
     if st.button('Clean data') and st.session_state.loaded_dfs:
         team_stats = clean_data(st.session_state.loaded_dfs)
+        st.session_state.loaded_dfs = team_stats
+        st.session_state.cleaned = True
+
+    if st.button('Extract and Clean'):
+        team_stats = extract_and_clean(years)
         st.session_state.loaded_dfs = team_stats
         st.session_state.cleaned = True
 
