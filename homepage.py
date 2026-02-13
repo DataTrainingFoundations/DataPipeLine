@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
 from src.extract.extract_module import DataExtractor
-from src.transform.transform_module_team import DataTransformer
+from src.transform.transform_module_team import DataTransformerTeam
 from src.load.load_module import DataLoader
 from dotenv import load_dotenv
 import os
@@ -53,9 +53,9 @@ def extract_data(fixed_cols, years):
 def clean_data(dfs):
     cleaned_dfs = []
     for df in dfs:
-        valid, rejected = DataTransformer.validate(df)
-        clean = DataTransformer.clean(valid)
-        cleaned_dfs.append(DataTransformer.team_stats(clean))
+        valid, rejected = DataTransformerTeam.validate(df)
+        clean = DataTransformerTeam.clean(valid)
+        cleaned_dfs.append(DataTransformerTeam.team_stats(clean))
     
     return cleaned_dfs
 

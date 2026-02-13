@@ -30,7 +30,7 @@ class DataTransformerTeam:
         return pd.DataFrame(valid_rows), pd.DataFrame(rejected_rows).fillna('Null')
     
     @staticmethod
-    def clean(self, df: pd.DataFrame):
+    def clean(df: pd.DataFrame):
         """Cleans the code by dropping any NA's and converting the attributes to int
         Returns a new DataFrame with these specific columns"""
         df["yards_gained"] = df["yards_gained"].dropna().astype(int)

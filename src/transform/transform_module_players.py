@@ -4,7 +4,8 @@ import pandas as pd
 
 class DataTransformerPlayers:
 
-    def validate(self, df: pd.DataFrame):
+    @staticmethod
+    def validate(df: pd.DataFrame):
         """ Validates the rows to add only QB, WR, and RB positions"""
         valid_rows = []
         rejected_rows = []
@@ -17,7 +18,8 @@ class DataTransformerPlayers:
 
         return pd.DataFrame(valid_rows), pd.DataFrame(rejected_rows).fillna('Null')
 
-    def clean(self, df: pd.DataFrame):
+    @staticmethod
+    def clean(df: pd.DataFrame):
         """Cleans the code by dropping any NA's and converting the attributes to int
         Returns a new DataFrame with these specific columns"""
         df["completions"] = df["completions"].dropna().astype(int)
