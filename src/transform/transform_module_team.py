@@ -1,18 +1,21 @@
-import pandas as pd
 import numpy as np
-""" FROM EXCEL
-Attribute: col letter
-posteam: E
-play_type: Z
-yards_gained: AA
-rush_attempt: EM
-pass_attempt: EN
-touchdown: EP
-pass_touchdown: EQ
-rush_touchdown: ER
-"""
+import pandas as pd
+import logging
+
+logger = logging.getLogger(__name__)
 class DataTransformerTeam:
     """Module to handle dataframe transformation"""
+    """ FROM EXCEL Attribute: 
+        col letter
+        posteam: E
+        play_type: Z
+        yards_gained: AA
+        rush_attempt: EM
+        pass_attempt: EN
+        touchdown: EP
+        pass_touchdown: EQ
+        rush_touchdown: ER
+    """
     @staticmethod
     def validate(df: pd.DataFrame):
         """ Validates the rows to add only pass and run play types"""
@@ -28,6 +31,41 @@ class DataTransformerTeam:
                 rejected_rows.append(row)
                 
         return pd.DataFrame(valid_rows), pd.DataFrame(rejected_rows).fillna('Null')
+    
+    @staticmethod
+    def split_df_rejected(df: pd.DataFrame, max_cols: int = 52):
+        """
+        Splits a DataFrame into multiple DataFrames with at most `max_cols`
+        columns each. Ensures 'posteam' exists in every split.
+        Returns: List[pd.DataFrame]
+        """
+        if 'posteam' not in df.columns:
+            raise ValueError("posteam column is required for splitting")
+
+        # Remove posteam temporarily so we can chunk the rest
+        other_cols = [c for c in df.columns if c != 'posteam']
+        chunk_size = max_cols - 1  # reserve space for posteam
+        chunks = [other_cols[i:i + chunk_size] for i in range(0, len(other_cols), chunk_size)]
+
+        split_dfs = []
+
+        for idx, cols in enumerate(chunks, start=1):
+            split_df = df[['posteam'] + cols].copy()
+            split_dfs.append(split_df)
+
+            logger.info(
+                "Rejected split %s | rows=%s | cols=%s | has_posteam=%s",
+                idx,
+                split_df.shape[0],
+                split_df.shape[1],
+                'posteam' in split_df.columns
+            )
+
+        logger.info("Total rejected splits created: %s", len(split_dfs))
+        return split_dfs
+
+
+
     
     @staticmethod
     def clean(df: pd.DataFrame):

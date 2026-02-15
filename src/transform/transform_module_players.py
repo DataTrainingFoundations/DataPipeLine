@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 """Transforms the extracted data for the players"""
 
@@ -17,7 +18,30 @@ class DataTransformerPlayers:
                 rejected_rows.append(row)
 
         return pd.DataFrame(valid_rows), pd.DataFrame(rejected_rows).fillna('Null')
+    @staticmethod
+    def split_rejected(df: pd.DataFrame):
+        """
+        Splits rejected rows into:
+        - rejected_team_stats: numeric columns only + posteam
+        - rejected_team_info: text/object columns only + posteam
+        """
+        if df.empty:
+            return pd.DataFrame(), pd.DataFrame()
 
+        # Ensure posteam is always included for alignment
+        numeric_cols = df.select_dtypes(include=[np.number]).columns.tolist()
+        text_cols = df.select_dtypes(exclude=[np.number]).columns.tolist()
+
+        if 'posteam' not in numeric_cols:
+            numeric_cols = ['posteam'] + numeric_cols
+        if 'posteam' not in text_cols:
+            text_cols = ['posteam'] + text_cols
+
+        rejected_team_stats = df[numeric_cols].copy()
+        rejected_team_info = df[text_cols].copy()
+
+        return rejected_team_stats, rejected_team_info
+    
     @staticmethod
     def clean(df: pd.DataFrame):
         """Cleans the code by dropping any NA's and converting the attributes to int

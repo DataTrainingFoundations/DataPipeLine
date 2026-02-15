@@ -26,7 +26,7 @@ class DataLoader:
         elif "datetime" in str(dtype):
             return "TIMESTAMP"
         else:
-            return "VARCHAR(50)"
+            return "TEXT"
 
     def create_(self, df: pd.DataFrame, table_name: str, primary_key: str = "id"):
         """creates a table using a datafram, and a specified table name 
@@ -46,6 +46,7 @@ class DataLoader:
             sql_type = self.map_dtype_to_mysql(dtype)
 
             col_quoted = f"`{col}`"
+            print(col_quoted)
             if col == primary_key:
                 columns.append(f"{col_quoted} {sql_type} PRIMARY KEY")
             else:
@@ -53,7 +54,6 @@ class DataLoader:
 
 
         sql = f"CREATE TABLE IF NOT EXISTS {table_name} ({', '.join(columns)});"
-
         try:
             with self.engine.begin() as conn:
                 conn.execute(text(sql))
@@ -61,6 +61,7 @@ class DataLoader:
         except Exception as e:
             logger.error("Failed to create table '%s': %s", table_name, e)
             raise
+
     def insert_(self, df: pd.DataFrame, table_name: str, primary_key: str = None):
         """Insert rows into a table. 
         Uses upsert if primary_key is provided, normal insert if not."""
@@ -72,16 +73,17 @@ class DataLoader:
         df_to_insert = df.where(pd.notnull(df), None)
 
         columns = list(df.columns)
+        columns_quoted = [f"`{c}`" for c in columns]
         placeholders = ", ".join([f":{c}" for c in columns])
         records = df_to_insert.to_dict(orient="records")
 
         if primary_key is None:
-            # Auto-increment PK case → normal insert
-            sql = f"INSERT INTO {table_name} ({', '.join(columns)}) VALUES ({placeholders});"
+        # Auto-increment PK case → normal insert
+            sql = f"INSERT INTO {table_name} ({', '.join(columns_quoted)}) VALUES ({placeholders});"
         else:
-            # User-defined PK → upsert
-            update_clause = ", ".join([f"{c}=VALUES({c})" for c in columns if c != primary_key])
-            sql = f"""INSERT INTO {table_name} ({', '.join(columns)})
+        # User-defined PK → upsert with backticks
+            update_clause = ", ".join([f"`{c}`=VALUES(`{c}`)" for c in columns if c != primary_key])
+            sql = f"""INSERT INTO {table_name} ({', '.join(columns_quoted)})
                     VALUES ({placeholders})
                     ON DUPLICATE KEY UPDATE {update_clause};"""
 
