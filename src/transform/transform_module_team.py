@@ -71,7 +71,9 @@ class DataTransformerTeam:
     def clean(df: pd.DataFrame):
         """Cleans the code by dropping any NA's and converting the attributes to int
         Returns a new DataFrame with these specific columns"""
-        df["yards_gained"] = df["yards_gained"].dropna().astype(int)
+        df = df.copy()
+        df = df.dropna(subset=["yards_gained"])
+        df["yards_gained"] = df["yards_gained"].astype(int)
         df["rush_attempt"] = df["rush_attempt"].astype(int)
         df["pass_attempt"] = df["pass_attempt"].astype(int)
         df["touchdown"] = df["touchdown"].astype(int)

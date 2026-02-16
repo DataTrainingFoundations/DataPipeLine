@@ -26,7 +26,7 @@ class DataLoader:
         elif "datetime" in str(dtype):
             return "TIMESTAMP"
         else:
-            return "TEXT"
+            return "VARCHAR(50)"
 
     def create_(self, df: pd.DataFrame, table_name: str, primary_key: str = "id"):
         """creates a table using a datafram, and a specified table name 
