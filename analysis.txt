@@ -1,0 +1,56 @@
+Questions:
+1. Has the NFL truly become more pass-heavy over time?
+        Follow Ups:
+        - When did the league significantly shift toward passing?
+        - Where there any rule changes to influence this?
+
+        Graphs:
+        - Line Graph showing avg number of pass attempts vs rush attempts
+
+2. Does passing efficiency correlate more strongly with winning than rushing?
+        Graphs:
+        - Scatter plot with pass attempt %(pass attempts / total plays) vs Win percentage
+            - Color code playoff teams
+        - Scatter plot with pass efficiency(pass yards / pass attempts) vs rush efficiency(rush yards / rush attempts)
+            - Make bubbles different sizes on win %
+
+3. Do Super Bowl teams lean pass or run?
+
+4. Is rushing still important in the playoffs?
+        Follow ups:
+        - Do playoff teams lean more balanced?
+        Graphs:
+        - Bar chart avg pass % vs avg rush % for playoff vs non-playoff teams
+
+5. Does balance (run/pass ratio) outperform extremes?
+        Follow ups:
+        - Is the league conerging towards similar offensive styles?
+        Graphs:
+        - Histogram of pass % by year
+
+6. Do elite offenses rely more on efficiency or volume?
+        Follow ups:
+        - What matters more throwing more or throwing better?
+        Graphs:
+        - Scatter plot with pass attempts vs wins
+        - Scatter plot with pass yards per attempt vs wins
+
+7. Are bad teams run-heavy because they’re losing, or vice versa?
+
+Other questions we could possibly answer but would need more data:
+- Do teams rush more if they are winning?
+
+Other graphs that could be useful:
+- Pass TD rate vs Rush TD rate vs Wins
+- Correlation matrix between pass attempts, rush attempts, yards per pass, yards per rush, wins
+
+What we need to get/calculate:
+- GET: team wins, playoff teams
+- CALCULATE: pass %, rush %, yards per pass, yards per rush, win %
+- AVERAGES: pass attempts, rush attempts, pass yards, rush yards
+
+What we could conclude:
+- The league has gotten more pass heavy
+- Efficiency is more important than volume
+- Balance and efficiency correlate to wins
+- Modern NFL = efficiency-driven passing league
