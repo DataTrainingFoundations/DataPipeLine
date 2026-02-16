@@ -36,32 +36,26 @@ if 'current_fig' not in st.session_state:
 
 @st.cache_data
 def extract_data(years):
-    return get_multiple_pbp(*years)
+    dfs = []
+    for year in years:
+        df = get_reg_team_stats(year)
+        dfs.append(df)
+    return dfs
 
 @st.cache_data
 def clean_data(dfs):
     cleaned_dfs = []
     for df in dfs:
-        valid, rejected = DataTransformerTeam.validate(df)
-        clean = DataTransformerTeam.clean(valid)
+        clean = DataTransformerTeam.clean(df)
         cleaned_dfs.append(DataTransformerTeam.team_stats(clean))
     
     return cleaned_dfs
 
-@st.cache_data
-def extract_and_clean(years):
-    cleaned_dfs = []
-    for year in years:
-        df = get_pbp(year)
-        valid, rejected = DataTransformerTeam.validate(df)
-        clean = DataTransformerTeam.clean(valid)
-        cleaned_dfs.append(DataTransformerTeam.team_stats(clean))
-
 def load_data(dfs, years):
     for i, df in enumerate(dfs):
         table_name = f'{years[i]}_team_stats'
-        load.create_(df = df, table_name = table_name, primary_key = 'posteam')
-        load.insert_(df = df, table_name= table_name, primary_key='posteam')
+        load.create_(df = df, table_name = table_name, primary_key = 'team')
+        load.insert_(df = df, table_name= table_name, primary_key='team')
 
 def reset_sorted():
     st.session_state.sort_column = None
@@ -89,7 +83,7 @@ def build_bar_chart(df, y_cols, title):
     )
 
     ax.set_xticks(x)
-    ax.set_xticklabels(df['posteam'], rotation=45, ha='right')
+    ax.set_xticklabels(df['team'], rotation=45, ha='right')
     ax.set_title(title)
     ax.legend()
 
@@ -165,19 +159,26 @@ def show_year_data():
     attempts_rows = []
 
     for year, df in season_map.items():
-        attempts_rows.append({
-            'season' : year,
-            'pass_attempts' : int(df['pass_attempts'].astype('Int64').sum()),
-            'rush_attempts' : int(df['rush_attempts'].astype('Int64').sum())
-        })
+        if year < 2002:
+            attempts_rows.append({
+                'season' : year,
+                'pass_attempts_avg' : int(df['pass_attempts'].astype('Int64').sum() / 31),
+                'rush_attempts_avg' : int(df['rush_attempts'].astype('Int64').sum() / 31)
+            })
+        else:
+            attempts_rows.append({
+                'season' : year,
+                'pass_attempts_avg' : int(df['pass_attempts'].astype('Int64').sum() / 32),
+                'rush_attempts_avg' : int(df['rush_attempts'].astype('Int64').sum() / 32)
+            })
 
     yearly_attempts = pd.DataFrame(attempts_rows).sort_values('season')
 
     fig, ax = plt.subplots(figsize=(12, 4.5))
-    ax.plot(yearly_attempts['season'], yearly_attempts['pass_attempts'], label='Pass Attempts')
-    ax.plot(yearly_attempts['season'], yearly_attempts['rush_attempts'], label='Rush Attempts')
+    ax.plot(yearly_attempts['season'], yearly_attempts['pass_attempts_avg'], label='Pass Attempts_avg')
+    ax.plot(yearly_attempts['season'], yearly_attempts['rush_attempts_avg'], label='Rush Attempts_avg')
 
-    ax.set_title('NFL Pass vs Rush Attempts Over Time')
+    ax.set_title('NFL Pass vs Rush Average Attempts Over Time')
     ax.set_xlabel('Season')
     ax.set_ylabel('Attempts')
     ax.legend()
@@ -188,11 +189,18 @@ def show_year_data():
     yards_rows = []
 
     for year, df in season_map.items():
-        yards_rows.append({
+        if year < 2002:
+            yards_rows.append({
+                'season' : year,
+                'pass_yards' : int(df['pass_yards'].astype('Int64').sum() / 31),
+                'rush_yards' : int(df['rush_yards'].astype('Int64').sum() / 31)
+            })
+        else:
+            yards_rows.append({
             'season' : year,
-            'pass_yards' : int(df['pass_yards'].astype('Int64').sum()),
-            'rush_yards' : int(df['rush_yards'].astype('Int64').sum())
-        })
+            'pass_yards' : int(df['pass_yards'].astype('Int64').sum() / 32),
+            'rush_yards' : int(df['rush_yards'].astype('Int64').sum() / 32)
+            })
 
     yearly_yards = pd.DataFrame(yards_rows).sort_values('season')
 
@@ -228,11 +236,6 @@ with col1:
 
     if st.button('Clean data') and st.session_state.loaded_dfs:
         team_stats = clean_data(st.session_state.loaded_dfs)
-        st.session_state.loaded_dfs = team_stats
-        st.session_state.cleaned = True
-
-    if st.button('Extract and Clean'):
-        team_stats = extract_and_clean(years)
         st.session_state.loaded_dfs = team_stats
         st.session_state.cleaned = True
 
