@@ -1,24 +1,26 @@
 import os
 import nflreadpy as nfl
-from concurrent.futures import ProcessPoolExecutor
+import pandas as pd
 
 def get_pbp(year):
     pbp = nfl.load_pbp(year)
     df_pbp = pbp.to_pandas()
     return df_pbp
 
-def get_multiple_pbp(*args):
-    with ProcessPoolExecutor(max_workers = os.cpu_count()) as pool:
-            data_frames = list(pool.map(get_pbp, args))
-    return data_frames
+def get_reg_team_stats(year):
+    team_stats = nfl.load_team_stats(year)
+    reg_team = team_stats.filter(team_stats['season_type'] == 'REG')
+    return reg_team.to_pandas()
 
-def get_player_stats(year):
-    player_stats = nfl.load_player_stats(year)
-    df_player = player_stats.to_pandas()
-    return df_player
+def get_post_team_stats(year):
+    team_stats = nfl.load_team_stats(year)
+    reg_team = team_stats.filter(team_stats['season_type'] == 'POST')
+    return reg_team.to_pandas()
 
-def get_multiple_player(*args):
-    with ProcessPoolExecutor(max_workers = os.cpu_count()) as pool:
-            data_frames = list(pool.map(get_player_stats, args))
-    return data_frames
-
+def save_team_stats(*args):
+    dfs = []
+    for year in args:
+        ts = nfl.load_team_stats(year)
+        reg_ts = ts.filter(ts['season_type'] == 'REG')
+        dfs.append(reg_ts.to_pandas())
+    return pd.concat(dfs, ignore_index=True)
