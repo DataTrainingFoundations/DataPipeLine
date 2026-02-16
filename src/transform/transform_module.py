@@ -3,7 +3,7 @@ import pandas as pd
 import logging
 
 logger = logging.getLogger(__name__)
-class DataTransformerTeam:
+class DataTransformer:
     """Module to handle dataframe transformation"""
     """ FROM EXCEL Attribute: 
         col letter
@@ -79,7 +79,15 @@ class DataTransformerTeam:
         df["touchdown"] = df["touchdown"].astype(int)
         df["pass_touchdown"] = df["pass_touchdown"].astype(int)
         df["rush_touchdown"] = df["rush_touchdown"].astype(int)
-        new_df = df[['posteam', 'play_type', 'yards_gained', 'rush_attempt', 'pass_attempt', 'touchdown', 'pass_touchdown', 'rush_touchdown']]
+        new_df = df[['posteam', 
+                     'play_type', 
+                     'yards_gained', 
+                     'rush_attempt', 
+                     'pass_attempt', 
+                     'touchdown', 
+                     'pass_touchdown', 
+                     'rush_touchdown'
+        ]]
         return new_df
     @staticmethod
     def team_stats(season_data):
