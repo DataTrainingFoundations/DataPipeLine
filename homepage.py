@@ -3,30 +3,19 @@ import streamlit as st
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
-from src.extract.extract_module import DataExtractor
-from src.transform.transform_module import DataTransformerTeam
+from src.extract.nflreadpy_extract import *
+from src.transform.transform_module_api import DataTransformerTeam
 from src.load.load_module import DataLoader
 from dotenv import load_dotenv
 import os
 import json
 
 load_dotenv()
-extract = DataExtractor()
 load = DataLoader()
-
-
-# To run need this line in your .env file
-
-# USED_COLS=posteam|play_type|yards_gained|rush_attempt|pass_attempt|touchdown|pass_touchdown|rush_touchdown
 
 # Simple streamlit homepage to look at dataframes
 
 # In terminal call 'streamlit run homepage.py'
-
-# TO DO:
-#     ADD charts
-#     Toggle for single season data or multi-year data
-
 
 st.set_page_config(layout="wide")
 col1, col2 = st.columns([1,3], border = True)
@@ -46,15 +35,18 @@ if 'current_fig' not in st.session_state:
     st.session_state['current_fig'] = None
 
 @st.cache_data
-def extract_data(fixed_cols, years):
-    return DataExtractor.extract_multiple_files_by_cols(fixed_cols, *years)
+def extract_data(years):
+    dfs = []
+    for year in years:
+        df = get_reg_team_stats(year)
+        dfs.append(df)
+    return dfs
 
 @st.cache_data
 def clean_data(dfs):
     cleaned_dfs = []
     for df in dfs:
-        valid, rejected = DataTransformerTeam.validate(df)
-        clean = DataTransformerTeam.clean(valid)
+        clean = DataTransformerTeam.clean(df)
         cleaned_dfs.append(DataTransformerTeam.team_stats(clean))
     
     return cleaned_dfs
@@ -62,8 +54,8 @@ def clean_data(dfs):
 def load_data(dfs, years):
     for i, df in enumerate(dfs):
         table_name = f'{years[i]}_team_stats'
-        load.create_(df = df, table_name = table_name, primary_key = 'posteam')
-        load.insert_(df = df, table_name= table_name, primary_key='posteam')
+        load.create_(df = df, table_name = table_name, primary_key = 'team')
+        load.insert_(df = df, table_name= table_name, primary_key='team')
 
 def reset_sorted():
     st.session_state.sort_column = None
@@ -91,7 +83,7 @@ def build_bar_chart(df, y_cols, title):
     )
 
     ax.set_xticks(x)
-    ax.set_xticklabels(df['posteam'], rotation=45, ha='right')
+    ax.set_xticklabels(df['team'], rotation=45, ha='right')
     ax.set_title(title)
     ax.legend()
 
@@ -167,19 +159,26 @@ def show_year_data():
     attempts_rows = []
 
     for year, df in season_map.items():
-        attempts_rows.append({
-            'season' : year,
-            'pass_attempts' : int(df['pass_attempts'].astype('Int64').sum()),
-            'rush_attempts' : int(df['rush_attempts'].astype('Int64').sum())
-        })
+        if year < 2002:
+            attempts_rows.append({
+                'season' : year,
+                'pass_attempts_avg' : int(df['pass_attempts'].astype('Int64').sum() / 31),
+                'rush_attempts_avg' : int(df['rush_attempts'].astype('Int64').sum() / 31)
+            })
+        else:
+            attempts_rows.append({
+                'season' : year,
+                'pass_attempts_avg' : int(df['pass_attempts'].astype('Int64').sum() / 32),
+                'rush_attempts_avg' : int(df['rush_attempts'].astype('Int64').sum() / 32)
+            })
 
     yearly_attempts = pd.DataFrame(attempts_rows).sort_values('season')
 
     fig, ax = plt.subplots(figsize=(12, 4.5))
-    ax.plot(yearly_attempts['season'], yearly_attempts['pass_attempts'], label='Pass Attempts')
-    ax.plot(yearly_attempts['season'], yearly_attempts['rush_attempts'], label='Rush Attempts')
+    ax.plot(yearly_attempts['season'], yearly_attempts['pass_attempts_avg'], label='Pass Attempts_avg')
+    ax.plot(yearly_attempts['season'], yearly_attempts['rush_attempts_avg'], label='Rush Attempts_avg')
 
-    ax.set_title('NFL Pass vs Rush Attempts Over Time')
+    ax.set_title('NFL Pass vs Rush Average Attempts Over Time')
     ax.set_xlabel('Season')
     ax.set_ylabel('Attempts')
     ax.legend()
@@ -190,11 +189,18 @@ def show_year_data():
     yards_rows = []
 
     for year, df in season_map.items():
-        yards_rows.append({
+        if year < 2002:
+            yards_rows.append({
+                'season' : year,
+                'pass_yards' : int(df['pass_yards'].astype('Int64').sum() / 31),
+                'rush_yards' : int(df['rush_yards'].astype('Int64').sum() / 31)
+            })
+        else:
+            yards_rows.append({
             'season' : year,
-            'pass_yards' : int(df['pass_yards'].astype('Int64').sum()),
-            'rush_yards' : int(df['rush_yards'].astype('Int64').sum())
-        })
+            'pass_yards' : int(df['pass_yards'].astype('Int64').sum() / 32),
+            'rush_yards' : int(df['rush_yards'].astype('Int64').sum() / 32)
+            })
 
     yearly_yards = pd.DataFrame(yards_rows).sort_values('season')
 
@@ -214,23 +220,19 @@ def show_year_data():
 
 with col1:
 
-    cols_string = os.getenv('USED_COLS')
-    cols = cols_string.split('|')
-
     st.title('RUN vs PASS', text_alignment = 'center', anchor=False)
     st.subheader('An analysis on the NFL', text_alignment = 'center', anchor=False)  
     st.divider(width = 'stretch')
 
-    year_range = list(st.select_slider('Select the range of years you\'d like to analyze', options = range(2009, 2020), value = (2009, 2019)))
+    year_range = list(st.select_slider('Select the range of years you\'d like to analyze', options = range(1999, 2026), value = (1999, 2025)))
     years = list(range(year_range[0], year_range[1] + 1))
     if st.session_state.get('option')not in years:
         st.session_state.option = years[0]
 
     if st.button('Extract data'):
-        season_dataframes = extract_data(cols, years)
+        season_dataframes = extract_data(years)
         st.session_state.loaded_dfs = season_dataframes
         st.session_state.cleaned = False
-
 
     if st.button('Clean data') and st.session_state.loaded_dfs:
         team_stats = clean_data(st.session_state.loaded_dfs)

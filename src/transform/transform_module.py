@@ -92,18 +92,15 @@ class DataTransformer:
     @staticmethod
     def team_stats(season_data):
         """Gets the team stats for every NFL team"""
-        season_data['pass_yards'] = season_data['yards_gained'] * season_data['pass_attempt']
-        season_data['rush_yards'] = season_data['yards_gained'] * season_data['rush_attempt']
-
-        stats = (season_data.groupby('posteam', as_index = False)
-                .agg(
-                    pass_yards = ('pass_yards', 'sum'),
-                    rush_yards = ('rush_yards', 'sum'),
-                    pass_attempts = ('pass_attempt', 'sum'),
-                    rush_attempts = ('rush_attempt', 'sum'),
-                    pass_touchdowns = ('pass_touchdown', 'sum'),
-                    rush_touchdowns = ('rush_touchdown', 'sum'),
-                    )
-                )
+        stats = (season_data.groupby(['team'], as_index = False)
+        .agg(
+            pass_yards = ('passing_yards', 'sum'),
+            rush_yards = ('rushing_yards', 'sum'),
+            pass_attempts = ('attempts', 'sum'),
+            rush_attempts = ('carries', 'sum'),
+            pass_touchdowns = ('passing_tds', 'sum'),
+            rush_touchdowns = ('rushing_tds', 'sum')
+            )
+        )
 
         return stats
