@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
 from src.extract.nflreadpy_extract import *
-from src.transform.transform_module_team import DataTransformerTeam
+from src.transform.transform_module_api import DataTransformerTeam
 from src.load.load_module import DataLoader
 from dotenv import load_dotenv
 import os
