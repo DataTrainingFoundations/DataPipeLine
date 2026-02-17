@@ -21,6 +21,10 @@ def get_post_team_stats(year):
     reg_team = team_stats.filter(team_stats['season_type'] == 'POST')
     return reg_team.to_pandas()
 
+def get_schedule(year):
+    team_schedule = nfl.load_schedules(year)
+    return team_schedule.to_pandas()
+
 def save_team_stats(*args):
     dfs = []
     for year in args:
