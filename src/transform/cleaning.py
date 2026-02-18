@@ -1,5 +1,8 @@
 import pandas as pd
 import numpy as np
+import logging
+
+logger = logging.getLogger(__name__)
 
 class cleaning:   
     """Module to handle dataframe cleaning and null value handling"""

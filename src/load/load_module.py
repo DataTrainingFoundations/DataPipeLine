@@ -1,7 +1,7 @@
 """Load_Module contains logic for loading dataframes into database"""
 import logging
 import pandas as pd
-from sqlalchemy import text
+from sqlalchemy import inspect,text
 from src.db.engine import get_engine
 
 logger = logging.getLogger(__name__)
@@ -26,34 +26,48 @@ class DataLoader:
         elif "datetime" in str(dtype):
             return "TIMESTAMP"
         else:
-            return "VARCHAR(50)"
+            return "TEXT"
 
     def create_(self, df: pd.DataFrame, table_name: str, primary_key: str = "id"):
-        """creates a table using a datafram, and a specified table name 
+        """creates a table using a DataFrame, and a specified table name 
         with an option to automatically add an incrementing int ID 
         or a specific value for a primary key"""
+
         if df is None or df.empty:
             logger.error("Cannot create table '%s': DataFrame is empty or None", table_name)
             raise ValueError("DataFrame is empty or None")
 
-        columns = []
-        # If no primary key specified
-        if primary_key is None:
-            columns.append("id SERIAL PRIMARY KEY")
+        # --- Check if table exists ---
+        inspector = inspect(self.engine)
+        if inspector.has_table(table_name):
+            logger.info("Table '%s' already exists. Skipping creation.", table_name)
+            return
 
-        # Primary Key passed in and insert rows
+        columns = []
+
+        # --- Handle primary key ---
+        if primary_key is None:
+            # Case 1: no PK specified → create 'id'
+            columns.append("id SERIAL PRIMARY KEY")
+            primary_key = None  # nothing in df gets PK
+        elif primary_key not in df.columns:
+            # Case 2: PK specified but not in df → create that column as PK
+            columns.append(f"`{primary_key}` SERIAL PRIMARY KEY")
+            primary_key = None  # don't assign PK to any df column
+        # Case 3: PK exists in df → will assign in loop
+
+        # --- Add remaining columns ---
         for col, dtype in zip(df.columns, df.dtypes):
             sql_type = self.map_dtype_to_mysql(dtype)
-
             col_quoted = f"`{col}`"
-            print(col_quoted)
             if col == primary_key:
                 columns.append(f"{col_quoted} {sql_type} PRIMARY KEY")
             else:
                 columns.append(f"{col_quoted} {sql_type}")
 
+        sql = f"CREATE TABLE {table_name} ({', '.join(columns)});"
 
-        sql = f"CREATE TABLE IF NOT EXISTS {table_name} ({', '.join(columns)});"
+        # --- Execute SQL ---
         try:
             with self.engine.begin() as conn:
                 conn.execute(text(sql))
@@ -62,7 +76,8 @@ class DataLoader:
             logger.error("Failed to create table '%s': %s", table_name, e)
             raise
 
-    def insert_(self, df: pd.DataFrame, table_name: str, primary_key: str = None):
+
+    def insert_(self, df: pd.DataFrame, table_name: str, primary_key: str):
         """Insert rows into a table. 
         Uses upsert if primary_key is provided, normal insert if not."""
         if df is None or df.empty:
@@ -70,12 +85,10 @@ class DataLoader:
             raise ValueError("DataFrame is empty or None")
         # Convert NaN to None for SQL
 
-        df_to_insert = df.where(pd.notnull(df), None)
-
         columns = list(df.columns)
         columns_quoted = [f"`{c}`" for c in columns]
         placeholders = ", ".join([f":{c}" for c in columns])
-        records = df_to_insert.to_dict(orient="records")
+        records = df.to_dict(orient="records")
 
         if primary_key is None:
         # Auto-increment PK case → normal insert

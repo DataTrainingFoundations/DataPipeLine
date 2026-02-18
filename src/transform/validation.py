@@ -2,6 +2,7 @@
 import numpy as np
 import pandas as pd
 import logging
+
 logger = logging.getLogger(__name__)
 
 
@@ -11,26 +12,40 @@ class validation:
     @staticmethod
     def valid_rows(df: pd.DataFrame, checked_column: str, row_values: list):
         """ Validates the rows to add only pass and run play types"""
+        logger.info(
+            "Validating rows | column=%s | allowed_values=%s | input_rows=%s",
+            checked_column,
+            row_values,
+            len(df)
+        )
         valid_df = df[df[checked_column].isin(row_values)].copy()
         # Replace 'JAC' with 'JAX' in posteam if the column exists
         if "posteam" in valid_df.columns:
             valid_df["posteam"] = valid_df["posteam"].replace({"JAC": "JAX"})
-        
+        logger.info("Row validation complete | output_rows=%s", len(valid_df))
         return valid_df
     
     @staticmethod
     def valid_columns(df: pd.DataFrame, wanted_columns:list):
         """ Validates the rows to add only pass and run play types"""
-        
+        logger.info(
+            "Validating columns | requested=%s | available=%s",
+            len(wanted_columns),
+            len(df.columns)
+        )
         valid_columns = [col for col in wanted_columns if col in df.columns]
-
+        logger.info("Total columns chosen: %s", len(valid_columns))
         chosen_df = df[valid_columns].copy()
         remaining_df = df.drop(columns=valid_columns).copy()
-
+        logger.info(
+            "Column validation complete | chosen_cols=%s | rejected_cols=%s",
+            chosen_df.shape[1],
+            remaining_df.shape[1]
+        )
         return chosen_df, remaining_df
     
     @staticmethod
-    def split_df_rejected(df: pd.DataFrame, max_cols: int = 52, primary_id_col: str = None):
+    def split_df_rejected(df: pd.DataFrame, max_cols: int = 52, primary_id_col: str ='id'):
         """
         Splits a DataFrame into multiple DataFrames with at most `max_cols`
         columns each. Ensures 'posteam' exists in every split.
