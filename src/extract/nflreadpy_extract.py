@@ -23,7 +23,8 @@ def get_post_team_stats(year):
 
 def get_schedule(year):
     team_schedule = nfl.load_schedules(year)
-    return team_schedule.to_pandas()
+    reg_team_schedule = team_schedule.filter(team_schedule['game_type'] == 'REG')
+    return reg_team_schedule.to_pandas()
 
 def save_team_stats(*args):
     dfs = []
