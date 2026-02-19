@@ -1,93 +1,98 @@
+import os
 import pandas as pd
+from dotenv import load_dotenv
 
+load_dotenv()
+team_cols = os.getenv('TEAM_COLS').split('|')
+fact_cols = os.getenv('FACT_COLS').split('|')
+schedule_home = os.getenv("SCHEDULE_HOME").split('|')
+schedule_away = os.getenv("SCHEDULE_AWAY").split('|')
+game_cols = os.getenv("GAME_COLS").split('|')
 
-def team_stats(df):
-    stats = (df.groupby(['team'], as_index = False)
-        .agg(
-            pass_yards = ('passing_yards', 'sum'),
-            rush_yards = ('rushing_yards', 'sum'),
-            pass_attempts = ('attempts', 'sum'),
-            rush_attempts = ('carries', 'sum'),
-            pass_touchdowns = ('passing_tds', 'sum'),
-            rush_touchdowns = ('rushing_tds', 'sum')
-            )
-        )
-    return stats
+def team_table(df):
+    t_table = df.rename(columns = {
+        'team_abbr': 'team_id',
+        'team_id': 'ignore'
+    })[team_cols]
 
-def team_records(df):
-    # Calculates wins from schedule dataframe
-    wins = (
-        df
-        .assign(
-            home_win=lambda x: (x.home_score > x.away_score).astype(int),
-            away_win=lambda x: (x.away_score > x.home_score).astype(int)
-        )
-    )
+    return t_table
 
-    # Assigns wins to teams
-    home_wins = wins.groupby(["season", "home_team"])["home_win"].sum()
-    away_wins = wins.groupby(["season", "away_team"])["away_win"].sum()
+def season_table(df):
+    s_table = (df[['season']].drop_duplicates())
+    s_table["num_games"] = s_table["season"].apply(lambda x: 16 if x < 2021 else 17)
 
-    # Creates dataframe with season team and wins
-    team_record = home_wins.add(away_wins, fill_value=0).reset_index()
-    team_record.columns = ["season", "team", "wins"]
+    s_table_rename = s_table.rename(columns = {'season': 'season_id'})
+    print(s_table_rename)
+    return s_table_rename
 
-    # Caluclates losses by getting total number of games
-    home_games = df.groupby(["season", "home_team"]).size()
-    away_games = df.groupby(["season", "away_team"]).size()
-    total_games = home_games.add(away_games, fill_value=0).reset_index()
-    total_games.columns = ["season", "team", "games_played"]
+def game_table(df):
+    g_table = df.rename(columns = {
+        'season': 'season_id'
+    })[game_cols]
+    g_table['game_id'] = g_table['season_id'].astype(str) + '_' + g_table['week'].astype(str) + '_' + g_table['home_team']
+    return g_table
 
-    # Adds losses column to team_record dataframe
-    team_record['losses'] = total_games['games_played'] - team_record['wins']
+def facts_table(stats_df, schedule_df):
+    if stats_df is None or schedule_df is None:
+        raise ValueError("stats_df and schedule_df cannot be None")
 
-    return team_record
+    # -----------------------------
+    # Build team_games from schedule
+    # -----------------------------
+    home_games = schedule_df[schedule_home].copy()
+    home_games['team_id'] = home_games['home_team']
+    home_games['points_scored'] = home_games['home_score']
+    home_games['points_allowed'] = home_games['away_score']
+    home_games['is_home'] = True
 
-def stat_percentages(df_stats, df_record):
-    # TEAM STATS
-    # Pass % = pass attempts / pass attempts + rush attempts
-    # Rush % = rush attempts / pass attempts + rush attempts
-    # YPA = pass yards / pass attempts
-    # YPR = rush yards / rush attempts
-    # Win % = wins / wins + losses
-    # Combine the data first
-    df = df_stats.merge(df_record, on=['team'])
-    
-    # Total plays
-    total_plays = df['pass_attempts'] + df['rush_attempts']
-    
-    # Percentages
-    df_percent = pd.DataFrame({
-        'team': df['team'],
-        'pass_percent': df['pass_attempts'] / total_plays,
-        'rush_percent': df['rush_attempts'] / total_plays,
-        'ypa': df['pass_yards'] / df['pass_attempts'],
-        'ypr': df['rush_yards'] / df['rush_attempts'],
-        'win_percent': df['wins'] / (df['wins'] + df['losses'])
+    away_games = schedule_df[schedule_away].copy()
+    away_games['team_id'] = away_games['away_team']
+    away_games['points_scored'] = away_games['away_score']
+    away_games['points_allowed'] = away_games['home_score']
+    away_games['is_home'] = False
+
+    team_games = pd.concat([home_games, away_games], ignore_index=True)
+
+    team_games = team_games.rename(columns={
+        'season': 'season_id'
     })
 
-    return df_percent
+    # -----------------------------
+    # Prepare team_stats
+    # -----------------------------
+    team_stats = stats_df.rename(columns={
+        'season': 'season_id',
+        'team': 'team_id'
+    })
 
+    f_table = team_stats.merge(
+        team_games,
+        on=['season_id','week','team_id'],
+        how='left'
+    )
 
-def league_averages(df_stats):
-    # LEAGUE STATS
-    # Average pass attempts
-    # Average rush attempts
-    # Average pass %
-    # Average rush %
-    avg_pass_attempts = df_stats['pass_attempts'].mean()
-    avg_rush_attempts = df_stats['rush_attempts'].mean()
-    
-    total_pass = df_stats['pass_attempts'].sum()
-    total_rush = df_stats['rush_attempts'].sum()
-    total_plays = total_pass + total_rush
-    
-    avg_pass_percent = total_pass / total_plays
-    avg_rush_percent = total_rush / total_plays
-    
-    return {
-        'avg_pass_attempts': avg_pass_attempts,
-        'avg_rush_attempts': avg_rush_attempts,
-        'avg_pass_percent': avg_pass_percent,
-        'avg_rush_percent': avg_rush_percent
-    }
+    f_table['game_id'] = (
+        f_table['season_id'].astype(str) + "_" +
+        f_table['week'].astype(str) + "_" +
+        f_table['team_id'].fillna('')
+    )
+
+    f_table['result'] = f_table.apply(
+        lambda row: 'W' if row['points_scored'] > row['points_allowed']
+        else 'L' if row['points_scored'] < row['points_allowed']
+        else 'T',
+        axis=1
+    )
+
+    print(f_table)
+
+    final_table = f_table.rename(columns={
+        'attempts': 'pass_attempts',
+        'carries': 'rush_attempts',
+        'passing_yards': 'pass_yards',
+        'rushing_yards': 'rush_yards',
+        'passing_tds': 'pass_tds',
+        'rushing_tds': 'rush_tds'
+    })[fact_cols]
+
+    return final_table
