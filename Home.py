@@ -147,38 +147,40 @@ with tab1:
 
     with col2:
         option = st.selectbox(label = 'Select data you wish to chart', options = ['Season', 'Team', 'Game'])
-        nfl_facts = st.session_state.nfl_facts_table
 
-        if option == "Season":
-            start_year, end_year = st.slider(
-                "Select Year Range",
-                int(nfl_facts["season_id"].min()),
-                int(nfl_facts["season_id"].max()),
-                (2015, 2025)
-            )
+        if st.session_state.nfl_facts_table is not None:
+            nfl_facts = st.session_state.nfl_facts_table
 
-            df_view = get_season_view(nfl_facts, start_year, end_year)
-        elif option == "Team":
-            year = st.selectbox(
-                "Select Season",
-                sorted(nfl_facts["season_id"].unique())
-            )
+            if option == "Season":
+                start_year, end_year = st.slider(
+                    "Select Year Range",
+                    int(nfl_facts["season_id"].min()),
+                    int(nfl_facts["season_id"].max()),
+                    (2015, 2025)
+                )
 
-            df_view = get_team_view(nfl_facts, year)
-        elif option == "Game":
-            year = st.selectbox(
-                "Select Season",
-                sorted(nfl_facts["season_id"].unique())
-            )
+                df_view = get_season_view(nfl_facts, start_year, end_year)
+            elif option == "Team":
+                year = st.selectbox(
+                    "Select Season",
+                    sorted(nfl_facts["season_id"].unique())
+                )
 
-            week = st.slider("Select Week", 1, 22, 1)
+                df_view = get_team_view(nfl_facts, year)
+            elif option == "Game":
+                year = st.selectbox(
+                    "Select Season",
+                    sorted(nfl_facts["season_id"].unique())
+                )
 
-            df_view = get_game_view(nfl_facts, year, week)
+                week = st.slider("Select Week", 1, 22, 1)
 
-        chart = chart_builder(df_view)
+                df_view = get_game_view(nfl_facts, year, week)
 
-        with col1:
-            st.pyplot(chart)
+            chart = chart_builder(df_view)
+
+            with col1:
+                st.pyplot(chart)
 
 with tab2:
     table1, table2, table3, table4 = st.tabs(['team_table', 'season_table', 'game_table', 'nfl_facts_table'])
