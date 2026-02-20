@@ -6846,3 +6846,38 @@
 2026-02-18 16:09:57,782 - ERROR: Failed to create table 'Team_Stats_2009': (pymysql.err.OperationalError) (1170, "BLOB/TEXT column 'posteam' used in key specification without a key length")
 [SQL: CREATE TABLE Team_Stats_2009 (`posteam` TEXT PRIMARY KEY, `play_type` TEXT, `yards_gained` TEXT, `rush_attempt` TEXT, `pass_attempt` TEXT, `touchdown` TEXT, `pass_touchdown` TEXT, `rush_touchdown` TEXT);]
 (Background on this error at: https://sqlalche.me/e/20/e3q8)
+2026-02-20 12:34:40,123 - INFO: Database engine created successfully.
+2026-02-20 12:34:42,863 - DEBUG: https://raw.githubusercontent.com/ryurko/nflscrapR-data/refs/heads/master/play_by_play_data/regular_season/reg_pbp_2009.csv finished extracting
+2026-02-20 12:34:46,264 - INFO: Validating columns | requested=8 | available=256
+2026-02-20 12:34:46,264 - INFO: Total columns chosen: 8
+2026-02-20 12:34:46,444 - INFO: Column validation complete | chosen_cols=8 | rejected_cols=248
+2026-02-20 12:34:46,444 - INFO: Validating rows | column=play_type | allowed_values=['pass', 'run'] | input_rows=44596
+2026-02-20 12:34:46,452 - INFO: Row validation complete | output_rows=31729
+2026-02-20 12:34:47,769 - INFO: Rejected split 1 | rows=44596 | cols=52 | has_primary_id=True
+2026-02-20 12:34:47,809 - INFO: Rejected split 2 | rows=44596 | cols=52 | has_primary_id=True
+2026-02-20 12:34:47,832 - INFO: Rejected split 3 | rows=44596 | cols=52 | has_primary_id=True
+2026-02-20 12:34:47,868 - INFO: Rejected split 4 | rows=44596 | cols=52 | has_primary_id=True
+2026-02-20 12:34:47,903 - INFO: Rejected split 5 | rows=44596 | cols=45 | has_primary_id=True
+2026-02-20 12:34:47,903 - INFO: Total rejected splits created: 5
+2026-02-20 12:34:48,334 - INFO: SELECT DATABASE()
+2026-02-20 12:34:48,334 - INFO: [raw sql] {}
+2026-02-20 12:34:48,335 - INFO: SELECT @@sql_mode
+2026-02-20 12:34:48,335 - INFO: [raw sql] {}
+2026-02-20 12:34:48,336 - INFO: SELECT @@lower_case_table_names
+2026-02-20 12:34:48,336 - INFO: [raw sql] {}
+2026-02-20 12:34:48,337 - INFO: BEGIN (implicit)
+2026-02-20 12:34:48,337 - INFO: DESCRIBE `datapipelinemysql8`.`Team_Stats_2009`
+2026-02-20 12:34:48,337 - INFO: [raw sql] {}
+2026-02-20 12:34:48,339 - INFO: ROLLBACK
+2026-02-20 12:34:48,341 - INFO: BEGIN (implicit)
+2026-02-20 12:34:48,342 - INFO: CREATE TABLE Team_Stats_2009 (`posteam` VARCHAR(50) PRIMARY KEY, `play_type` VARCHAR(50), `yards_gained` VARCHAR(50), `rush_attempt` VARCHAR(50), `pass_attempt` VARCHAR(50), `touchdown` VARCHAR(50), `pass_touchdown` VARCHAR(50), `rush_touchdown` VARCHAR(50));
+2026-02-20 12:34:48,343 - INFO: [generated in 0.00028s] {}
+2026-02-20 12:34:48,361 - INFO: COMMIT
+2026-02-20 12:34:48,362 - INFO: Table 'Team_Stats_2009' created successfully.
+2026-02-20 12:34:48,574 - INFO: BEGIN (implicit)
+2026-02-20 12:34:48,707 - INFO: INSERT INTO Team_Stats_2009 (`posteam`, `play_type`, `yards_gained`, `rush_attempt`, `pass_attempt`, `touchdown`, `pass_touchdown`, `rush_touchdown`)
+                    VALUES (%(posteam)s, %(play_type)s, %(yards_gained)s, %(rush_attempt)s, %(pass_attempt)s, %(touchdown)s, %(pass_touchdown)s, %(rush_touchdown)s)
+                    ON DUPLICATE KEY UPDATE `play_type`=VALUES(`play_type`), `yards_gained`=VALUES(`yards_gained`), `rush_attempt`=VALUES(`rush_attempt`), `pass_attempt`=VALUES(`pass_attempt`), `touchdown`=VALUES(`touchdown`), `pass_touchdown`=VALUES(`pass_touchdown`), `rush_touchdown`=VALUES(`rush_touchdown`);
+2026-02-20 12:34:48,708 - INFO: [generated in 0.13334s] [{'posteam': 'PIT', 'play_type': 'pass', 'yards_gained': '5', 'rush_attempt': '0', 'pass_attempt': '1', 'touchdown': '0', 'pass_touchdown': '0', 'rush_touchdown': '0'}, {'posteam': 'PIT', 'play_type': 'run', 'yards_gained': '-3', 'rush_attempt': '1', 'pass_attempt': '0', 'touchdown': '0', 'pass_touchdown': '0', 'rush_touchdown': '0'}, {'posteam': 'PIT', 'play_type': 'pass', 'yards_gained': '0', 'rush_attempt': '0', 'pass_attempt': '1', 'touchdown': '0', 'pass_touchdown': '0', 'rush_touchdown': '0'}, {'posteam': 'TEN', 'play_type': 'run', 'yards_gained': '0', 'rush_attempt': '1', 'pass_attempt': '0', 'touchdown': '0', 'pass_touchdown': '0', 'rush_touchdown': '0'}, {'posteam': 'TEN', 'play_type': 'pass', 'yards_gained': '4', 'rush_attempt': '0', 'pass_attempt': '1', 'touchdown': '0', 'pass_touchdown': '0', 'rush_touchdown': '0'}, {'posteam': 'TEN', 'play_type': 'run', 'yards_gained': '-2', 'rush_attempt': '1', 'pass_attempt': '0', 'touchdown': '0', 'pass_touchdown': '0', 'rush_touchdown': '0'}, {'posteam': 'PIT', 'play_type': 'pass', 'yards_gained': '3', 'rush_attempt': '0', 'pass_attempt': '1', 'touchdown': '0', 'pass_touchdown': '0', 'rush_touchdown': '0'}, {'posteam': 'PIT', 'play_type': 'pass', 'yards_gained': '10', 'rush_attempt': '0', 'pass_attempt': '1', 'touchdown': '0', 'pass_touchdown': '0', 'rush_touchdown': '0'}  ... displaying 10 of 31729 total bound parameter sets ...  {'posteam': 'CIN', 'play_type': 'run', 'yards_gained': '-2', 'rush_attempt': '1', 'pass_attempt': '0', 'touchdown': '0', 'pass_touchdown': '0', 'rush_touchdown': '0'}, {'posteam': 'CIN', 'play_type': 'pass', 'yards_gained': '-7', 'rush_attempt': '0', 'pass_attempt': '1', 'touchdown': '0', 'pass_touchdown': '0', 'rush_touchdown': '0'}]
+2026-02-20 12:34:49,747 - INFO: COMMIT
+2026-02-20 12:34:49,752 - INFO: Inserted 31729 rows into 'Team_Stats_2009' successfully.
