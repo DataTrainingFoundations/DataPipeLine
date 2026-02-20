@@ -1,6 +1,7 @@
 import os
 import pandas as pd
 from dotenv import load_dotenv
+from src.transform.validation import validation
 
 load_dotenv()
 team_cols = os.getenv('TEAM_COLS').split('|')
@@ -13,9 +14,11 @@ def team_table(df):
     t_table = df.rename(columns = {
         'team_abbr': 'team_id',
         'team_id': 'ignore'
-    })[team_cols]
+    })
 
-    return t_table
+    valid, rejected = validation.valid_columns(t_table, team_cols)
+
+    return valid
 
 def season_table(df):
     s_table = (df[['season']].drop_duplicates())
@@ -28,9 +31,12 @@ def season_table(df):
 def game_table(df):
     g_table = df.rename(columns = {
         'season': 'season_id'
-    })[game_cols]
-    g_table['game_id'] = g_table['season_id'].astype(str) + '_' + g_table['week'].astype(str) + '_' + g_table['home_team']
-    return g_table
+    })
+    valid, rejected = validation.valid_columns(g_table, game_cols)
+    valid['game_id'] = valid['season_id'].astype(str) + '_' + valid['week'].astype(str) + '_' + valid['home_team']
+
+
+    return valid
 
 def facts_table(stats_df, schedule_df):
     if stats_df is None or schedule_df is None:
@@ -93,6 +99,8 @@ def facts_table(stats_df, schedule_df):
         'rushing_yards': 'rush_yards',
         'passing_tds': 'pass_tds',
         'rushing_tds': 'rush_tds'
-    })[fact_cols]
+    })
 
-    return final_table
+    valid, rejected = validation.valid_columns(final_table, fact_cols)
+
+    return valid
