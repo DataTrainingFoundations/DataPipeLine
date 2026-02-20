@@ -6,12 +6,18 @@ def get_pbp(year):
     pbp = nfl.load_pbp(year)
     return pbp.to_pandas()
 
-def get_team_stats(year):
-    stats = nfl.load_team_stats(year)
+def get_team_stats(year = None):
+    if year is None:
+        stats = nfl.load_team_stats()
+    else:
+        stats = nfl.load_team_stats(year)
     return stats.to_pandas()
 
-def get_schedule(year):
-    team_schedule = nfl.load_schedules(year)
+def get_schedule(year = None):
+    if year is None:
+        team_schedule = nfl.load_schedules()
+    else:
+        team_schedule = nfl.load_schedules(year)
     return team_schedule.to_pandas()
 
 def get_teams():

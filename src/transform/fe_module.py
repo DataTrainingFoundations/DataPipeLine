@@ -49,13 +49,11 @@ def facts_table(stats_df, schedule_df):
     home_games['team_id'] = home_games['home_team']
     home_games['points_scored'] = home_games['home_score']
     home_games['points_allowed'] = home_games['away_score']
-    home_games['is_home'] = True
 
     away_games = schedule_df[schedule_away].copy()
     away_games['team_id'] = away_games['away_team']
     away_games['points_scored'] = away_games['away_score']
     away_games['points_allowed'] = away_games['home_score']
-    away_games['is_home'] = False
 
     team_games = pd.concat([home_games, away_games], ignore_index=True)
 

@@ -37,28 +37,24 @@ if 'season_table' not in st.session_state:
 if 'nfl_facts_table' not in st.session_state:
     st.session_state.nfl_facts_table = None
 
-@st.cache_data
 def query_teams():
     with engine.connect() as connection:
         query = "SELECT * FROM team"
         result = pd.read_sql(query, connection)
         return result
     
-@st.cache_data
 def query_seasons():
     with engine.connect() as connection:
         query = "SELECT * FROM season"
         result = pd.read_sql(query, connection)
         return result
     
-@st.cache_data
 def query_games():
     with engine.connect() as connection:
         query = "SELECT * FROM game"
         result = pd.read_sql(query, connection)
         return result
     
-@st.cache_data
 def query_nfl_facts():
     with engine.connect() as connection:
         query = "SELECT * FROM nfl_facts"
@@ -73,30 +69,64 @@ def get_season_view(df, start_year, end_year):
 
     season_df = (
         filtered.groupby("season_id")
-        .mean(numeric_only=True)
+        .agg({
+            "pass_attempts": "sum",
+            "rush_attempts": "sum",
+            "pass_yards": "sum",
+            "rush_yards": "sum",
+            "pass_tds": "sum",
+            "rush_tds": "sum",
+        })
         .reset_index()
     )
 
+    season_df["avg_pass_pct"] = (
+        season_df["pass_attempts"] /
+        (season_df["pass_attempts"] + season_df["rush_attempts"])
+    )
+
+    season_df["avg_rush_pct"] = 1 - season_df["avg_pass_pct"]
+    season_df["avg_pass_pct"] *= 100
+    season_df["avg_rush_pct"] *= 100
+
+    new_season_df = season_df.dropna()
     return season_df
 
 
 def get_team_view(df, year):
     filtered = df[df["season_id"] == year]
 
+    # Aggregate season totals per team
     team_df = (
         filtered.groupby("team_id")
-        .sum(numeric_only=True)
+        .agg({
+            "pass_attempts": "sum",
+            "rush_attempts": "sum",
+            "pass_yards": "sum",
+            "rush_yards": "sum",
+            "pass_tds": "sum",
+            "rush_tds": "sum",
+            "result": lambda x: list(x),  # keep results for win %
+            "game_type": lambda x: list(x)
+        })
         .reset_index()
     )
 
-    # Optional: calculate win %
-    if "wins" in team_df.columns and "losses" in team_df.columns:
-        team_df["win_pct"] = (
-            team_df["wins"] /
-            (team_df["wins"] + team_df["losses"])
-        )
+    team_df["made_playoffs"] = team_df["game_type"].apply(
+        lambda games: any(g != "REG" for g in games)
+    )
 
-    return team_df
+    team_df['pass_percentage'] = (team_df['pass_attempts'] / (team_df['pass_attempts'] + team_df['rush_attempts'])) * 100
+    team_df['rush_percentage'] = (team_df['rush_attempts'] / (team_df['pass_attempts'] + team_df['rush_attempts'])) * 100
+    team_df['pass_td_percentage'] = (team_df['pass_tds'] / (team_df['pass_tds'] + team_df['rush_tds'])) * 100
+    team_df['rush_td_percentage'] = (team_df['rush_tds'] / (team_df['pass_tds'] + team_df['rush_tds'])) * 100
+
+    team_df.drop(columns=["game_type"], inplace=True)
+
+    team_df["win_pct"] = team_df["result"].apply(calculate_win_pct)
+
+    new_team_df = team_df.dropna()
+    return new_team_df
 
 
 def get_game_view(df, year, week):
@@ -105,44 +135,142 @@ def get_game_view(df, year, week):
         (df["week"] == week)
     ].copy()
 
-    return game_df
+    new_game_df = game_df.dropna()
+    return new_game_df
+
+def calculate_win_pct(results):
+    wins = results.count("W")
+    losses = results.count("L")
+    ties = results.count("T")
+
+    total = wins + losses + ties
+
+    if total == 0:
+        return 0
+
+    return (wins + 0.5 * ties) / total
  
 
-def chart_builder(df):
-    
+def chart_builder(df, x_axis=None):
+
     if df.empty:
         st.warning("No data available for selected filters.")
         return
 
-    numeric_cols = df.select_dtypes(include="number").columns.tolist()
+    if x_axis is None:
+        x_axis = st.selectbox("Select X-Axis", df.columns)
 
-    x_axis = st.selectbox("Select X-Axis", df.columns)
-    y_axis = st.selectbox("Select Y-Axis", numeric_cols)
+    y_options = [
+        col for col in df.select_dtypes(include="number").columns
+        if col != x_axis
+    ]
+
+    y_axis = st.selectbox("Select Y-Axis", y_options)
 
     graph_type = st.selectbox(
         "Select Chart Type",
         ["Bar", "Line", "Scatter", "Histogram"]
     )
 
-    fig, ax = plt.subplots()
+    # 🎯 Playoff Highlight Colors
+    has_playoff_col = "made_playoffs" in df.columns
 
+    color_map = {True: "#d62728", False: "#1f77b4"}  # red / blue
+
+    # ---------- BAR ----------
     if graph_type == "Bar":
-        df.plot(kind="bar", x=x_axis, y=y_axis, ax=ax)
 
+        if has_playoff_col:
+            fig = px.bar(
+                df,
+                x=x_axis,
+                y=y_axis,
+                color="made_playoffs",
+                color_discrete_map=color_map,
+                hover_data=df.columns
+            )
+        else:
+            fig = px.bar(
+                df,
+                x=x_axis,
+                y=y_axis,
+                hover_data=df.columns
+            )
+
+    # ---------- LINE ----------
     elif graph_type == "Line":
-        df.plot(kind="line", x=x_axis, y=y_axis, ax=ax)
 
+        fig = px.line(
+            df,
+            x=x_axis,
+            y=y_axis,
+            hover_data=df.columns
+        )
+
+    # ---------- SCATTER ----------
     elif graph_type == "Scatter":
-        df.plot(kind="scatter", x=x_axis, y=y_axis, ax=ax)
 
+        if has_playoff_col:
+            base_size = 14
+            playoff_boost = 2
+
+            sizes = [
+                base_size + playoff_boost if playoff else base_size
+                for playoff in df["made_playoffs"]
+            ]
+
+            fig = px.scatter(
+                df,
+                x=x_axis,
+                y=y_axis,
+                color="made_playoffs",
+                size=sizes,
+                size_max=18,
+                color_discrete_map=color_map,
+                hover_data=df.columns
+            )
+        else:
+            fig = px.scatter(
+                df,
+                x=x_axis,
+                y=y_axis,
+                hover_data=df.columns
+            )
+
+    # ---------- HISTOGRAM ----------
     elif graph_type == "Histogram":
-        df[y_axis].plot(kind="hist", ax=ax)
+
+        fig = px.histogram(
+            df,
+            x=y_axis
+        )
+
+    fig.update_layout(template="plotly_white")
 
     return fig
 
-tab1, tab2 = st.tabs(['Chart Builder', 'Data Preview'])
+tab1, tab2 = st.tabs(['Data Preview', 'Chart Builder'])
 
 with tab1:
+    table1, table2, table3, table4 = st.tabs(['team_table', 'season_table', 'game_table', 'nfl_facts_table'])
+    with table1:
+        team = query_teams()
+        st.dataframe(team, width = 'content')
+        st.session_state.team_table = team
+    with table2:
+        season = query_seasons()
+        st.dataframe(season, width = 'content')
+        st.session_state.season_table = season
+    with table3:
+        game = query_games()
+        st.dataframe(game, width = 'content')
+        st.session_state.game_table = game
+    with table4:
+        nfl_facts = query_nfl_facts()
+        st.dataframe(nfl_facts, width = 'content')
+        st.session_state.nfl_facts_table = nfl_facts
+
+with tab2:
     col1, col2 = st.columns([3, 1], border = True)
 
     with col2:
@@ -156,10 +284,11 @@ with tab1:
                     "Select Year Range",
                     int(nfl_facts["season_id"].min()),
                     int(nfl_facts["season_id"].max()),
-                    (2015, 2025)
+                    (1999, 2025)
                 )
 
                 df_view = get_season_view(nfl_facts, start_year, end_year)
+                chart = chart_builder(df_view, 'season_id')
             elif option == "Team":
                 year = st.selectbox(
                     "Select Season",
@@ -167,6 +296,7 @@ with tab1:
                 )
 
                 df_view = get_team_view(nfl_facts, year)
+                chart = chart_builder(df_view)
             elif option == "Game":
                 year = st.selectbox(
                     "Select Season",
@@ -176,31 +306,7 @@ with tab1:
                 week = st.slider("Select Week", 1, 22, 1)
 
                 df_view = get_game_view(nfl_facts, year, week)
-
-            chart = chart_builder(df_view)
+                chart = chart_builder(df_view)
 
             with col1:
-                st.pyplot(chart)
-
-with tab2:
-    table1, table2, table3, table4 = st.tabs(['team_table', 'season_table', 'game_table', 'nfl_facts_table'])
-    with table1:
-        team = query_teams()
-        st.dataframe(team, width = 'content')
-        if st.session_state.team_table is None:
-            st.session_state.team_table = team
-    with table2:
-        season = query_seasons()
-        st.dataframe(season, width = 'content')
-        if st.session_state.season_table is None:
-            st.session_state.season_table = season
-    with table3:
-        game = query_games()
-        st.dataframe(game, width = 'content')
-        if st.session_state.game_table is None:
-            st.session_state.game_table = game
-    with table4:
-        nfl_facts = query_nfl_facts()
-        st.dataframe(nfl_facts, width = 'content')
-        if st.session_state.nfl_facts_table is None:
-            st.session_state.nfl_facts_table = nfl_facts
+                st.plotly_chart(chart, width = 'content')
