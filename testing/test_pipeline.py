@@ -4,9 +4,9 @@ from src.extract.extract_module import DataExtractor
 from src.extract.nflreadpy_extract import get_pbp, get_team_stats, get_schedule, get_teams
 from src.load.load_module import DataLoader
 from unittest.mock import MagicMock, patch
-from src.transform.validation import validation
+from src.transform.validation import Validation
 from src.transform.fe_module import team_table, season_table, game_table, facts_table
-from src.transform.cleaning import cleaning
+from src.transform.cleaning import Cleaning
 
 """Testing the pipeline"""
 
@@ -46,7 +46,7 @@ def test_get_teams():
     assert not df.empty
 
 def test_validate_rows():
-    validate = validation()
+    validate = Validation()
     df = pd.DataFrame({
         "play_type": ["run", "pass", "kickoff", np.nan, "punt", "run", "run", "pass"],
         "posteam": ["JAC", "ATL", "NE", "DAL", "DEN", "NE", "CLE", "PHI"]
@@ -57,7 +57,7 @@ def test_validate_rows():
     assert list(valid_rows['play_type']) == ['run', 'pass', 'run', 'run', 'pass']
 
 def test_validate_columns():
-    validate = validation()
+    validate = Validation()
     df = pd.DataFrame({
         "play_type": ["run", "pass", "kickoff"],
         "posteam": ["JAC", "ATL", "NE"],
@@ -69,7 +69,7 @@ def test_validate_columns():
     assert list(rejected_cols.columns) == ["yards_gained"]
 
 def test_split_df_rejected():
-    validate = validation()
+    validate = Validation()
     df = pd.DataFrame({
         "posteam": ["ATL", "NE"],
         "col1": [1, 2],
@@ -85,7 +85,7 @@ def test_split_df_rejected():
         assert split.shape[1] <= 3
     
 def test_clean():
-    cleaner = cleaning()
+    cleaner = Cleaning()
     df = pd.DataFrame({
         "numeric_col": [1.5, np.nan, 3.0],
         "string_col": ["a", np.nan, "c"]
