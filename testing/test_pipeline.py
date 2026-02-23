@@ -14,20 +14,20 @@ from src.transform.cleaning import cleaning
 def test_extract_csv():
     extract = DataExtractor()
     FILE_PATH = "https://raw.githubusercontent.com/ryurko/nflscrapR-data/refs/heads/master/play_by_play_data/regular_season/reg_pbp_2009.csv"
-    df = extract.extract_data(FILE_PATH)
+    df = extract.extract_data(FILE_PATH, FILE_PATH)
     assert not df.empty
 
 def test_extract_json():
     extract = DataExtractor()
     csv_file = pd.read_csv("player_stats.csv")
     csv_file.to_json("player_stats.json")
-    df = extract.extract_data("player_stats.json")
+    df = extract.extract_data("player_stats.json", "player_stats.json")
     assert not df.empty
 
 def test_extract_invalid_file():
     extract = DataExtractor()
     FILE_PATH = "https://raw.githubusercontent.com/ryurko/nflscrapR-data/refs/heads/master/play_by_play_data/regular_season/reg_pbp_2009.txt"
-    df = extract.extract_data(FILE_PATH)
+    df = extract.extract_data(FILE_PATH, FILE_PATH)
     assert df is None
 
 def test_extract_csv_by_cols():
