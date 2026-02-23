@@ -37,7 +37,7 @@ def validate_schema(stats_df: pd.DataFrame, schedule_df: pd.DataFrame):
         return (len(stats_missing) == 0 and len(schedule_missing) == 0)
 
 if st.session_state.updated is not None:
-    st.write(f"Last updated: {st.session_state.updated}")
+    st.write(f"Last updated: {st.session_state.last_update}")
 
 with col1:
 
@@ -73,7 +73,10 @@ with col1:
         load.insert_(df = game_table, table_name= 'game', primary_key = 'game_id')
         load.insert_(df = cleaned_fact, table_name= 'nfl_facts', primary_key = 'game_id')
         loader.success("✅ Data Successfully Loaded!")
-        st.session_state.updated = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        st.session_state.last_update = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        st.session_state.updated = True
+        
 
 
 with col2:
@@ -122,7 +125,8 @@ with col2:
             load.insert_(df = items[2], table_name= 'nfl_facts', primary_key = 'game_id')
 
         loader.success("✅ Data Successfully Loaded!")
-        st.session_state.updated = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        st.session_state.last_update = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        st.session_state.updated = True
 
 
 # FILE UPLOADERS
@@ -174,7 +178,9 @@ if uploaded_stats and uploaded_schedule and validate_schema(uploaded_stats, uplo
     load.insert_(df = cleaned_fact, table_name= 'nfl_facts', primary_key = 'game_id')
 
     loader.success("✅ Data Successfully Loaded!")
-    st.session_state.updated = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    st.session_state.last_update = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    st.session_state.updated = True
+
 elif uploaded_stats and uploaded_schedule and validate_schema(uploaded_stats, uploaded_schedule) is not True:
     st.warning("Files not in correct format")
 
