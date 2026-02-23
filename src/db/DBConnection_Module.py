@@ -1,11 +1,11 @@
 import os
 import psycopg2
+import socket
 from dotenv import load_dotenv
 
 load_dotenv()
 class DbConnector():
-
-
+    """ Class that handles database connection"""
     def __init__(self):
         self.database = os.getenv("DB_NAME")
         self.host = os.getenv("DB_HOST")
@@ -15,6 +15,7 @@ class DbConnector():
         self.connection = None
 
     def connect(self):
+        """Gets database connection"""
         if self.connection is None:
             try:
                 self.connection = psycopg2.connect(
@@ -31,6 +32,7 @@ class DbConnector():
 
         return self.connection
     def cursor(self):
+        """Creates database cursor"""
         try:
             return self.connect().cursor()
         except psycopg2.Error as e:
@@ -38,6 +40,7 @@ class DbConnector():
             self.connection = None
 
     def close(self):
+        """Closes database connection"""
         if self.connection:
             try: 
                 self.connection.close()
@@ -47,14 +50,12 @@ class DbConnector():
                 self.connection = None
 
 
-
 if __name__ == "__main__":
     db = DbConnector()
     try:
         conn = db.connect()
         print("Connection successful!")
-    except Exception as e:
+    except socket.gaierror as e:
         print(f"Connection failed: {e}")
     finally:
         db.close()
-

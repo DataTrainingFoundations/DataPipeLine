@@ -1,12 +1,10 @@
-    
-import numpy as np
-import pandas as pd
+"""Module for handling tables rows and columns validation"""
 import logging
+import pandas as pd
 
 logger = logging.getLogger(__name__)
 
-
-class validation:
+class Validation:
     """Module to handle dataframe validation choosing columns and choosing rows given a column"""
 
     @staticmethod
@@ -24,10 +22,10 @@ class validation:
             valid_df["posteam"] = valid_df["posteam"].replace({"JAC": "JAX"})
         logger.info("Row validation complete | output_rows=%s", len(valid_df))
         return valid_df
-    
+
     @staticmethod
     def valid_columns(df: pd.DataFrame, wanted_columns:list):
-        """ Validates the rows to add only pass and run play types"""
+        """ Validates the columns to add only specified columns"""
         logger.info(
             "Validating columns | requested=%s | available=%s",
             len(wanted_columns),
@@ -43,7 +41,7 @@ class validation:
             remaining_df.shape[1]
         )
         return chosen_df, remaining_df
-    
+
     @staticmethod
     def split_df_rejected(df: pd.DataFrame, max_cols: int = 52, primary_id_col: str ='id'):
         """

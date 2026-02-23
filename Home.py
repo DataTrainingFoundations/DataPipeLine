@@ -12,22 +12,18 @@ from dotenv import load_dotenv
 from datetime import datetime
 import os
 
-
+# Get connection to database
 load_dotenv()
 load = DataLoader()
 engine = get_engine()
 
-# Simple streamlit homepage to look at dataframes
-
-# In terminal call 'streamlit run Home.py'
-
 st.set_page_config(layout="wide", page_title='NFL Analytics Platform')
 st.title('🏈 NFL Offensive Analysis', text_alignment = 'center')
 
-if st.session_state.updated is not None:
-    st.text(f"Last updated: {st.session_state.updated}")
+# SESSION STATES
+if 'updated' not in st.session_state:
+    st.session_state.updated = None
 
-#SESSION STATES
 if 'team_table' not in st.session_state:
     st.session_state.team_table = None
 
@@ -40,30 +36,32 @@ if 'season_table' not in st.session_state:
 if 'nfl_facts_table' not in st.session_state:
     st.session_state.nfl_facts_table = None
 
+if st.session_state.updated is not None:
+    st.text(f"Last updated: {st.session_state.updated}")
+
+# Querys for tables
 def query_teams():
     with engine.connect() as connection:
         query = "SELECT * FROM team"
         result = pd.read_sql(query, connection)
-        return result
-    
+        return result 
 def query_seasons():
     with engine.connect() as connection:
         query = "SELECT * FROM season"
         result = pd.read_sql(query, connection)
-        return result
-    
+        return result   
 def query_games():
     with engine.connect() as connection:
         query = "SELECT * FROM game"
         result = pd.read_sql(query, connection)
-        return result
-    
+        return result   
 def query_nfl_facts():
     with engine.connect() as connection:
         query = "SELECT * FROM nfl_facts"
         result = pd.read_sql(query, connection)
         return result
-    
+
+# Functions to build tables for chart builder 
 def get_season_view(df, start_year, end_year):
     filtered = df[
         (df["season_id"] >= start_year) &
@@ -94,8 +92,6 @@ def get_season_view(df, start_year, end_year):
 
     new_season_df = season_df.dropna()
     return new_season_df
-
-
 def get_team_view(df, year):
     filtered = df[df["season_id"] == year]
 
@@ -144,8 +140,6 @@ def get_team_view(df, year):
 
     new_team_df = team_df.dropna()
     return new_team_df
-
-
 def get_game_view(df, year, week):
     game_df = df[
         (df["season_id"] == year) &
@@ -166,7 +160,6 @@ def calculate_win_pct(results):
         return 0
 
     return (wins + 0.5 * ties) / total
- 
 
 def chart_builder(df, x_axis=None, compare = False):
 
@@ -289,6 +282,7 @@ def chart_builder(df, x_axis=None, compare = False):
 
     return fig
 
+# Tabs to view tables or charts
 tab1, tab2 = st.tabs(['Data Preview', 'Chart Builder'])
 
 with tab1:

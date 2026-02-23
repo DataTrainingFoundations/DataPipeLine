@@ -1,10 +1,10 @@
-import pandas as pd
-import numpy as np
+"""Module to handle data cleaning and formating"""
 import logging
+import pandas as pd
 
 logger = logging.getLogger(__name__)
 
-class cleaning:   
+class Cleaning:
     """Module to handle dataframe cleaning and null value handling"""
 
     @staticmethod

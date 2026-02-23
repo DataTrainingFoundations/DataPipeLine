@@ -1,17 +1,19 @@
-from sqlalchemy import create_engine
-import logging
-from dotenv import load_dotenv
+"""Module that handles database connection engine"""
 import os
+import logging
+from sqlalchemy import create_engine
+from dotenv import load_dotenv
+
 
 load_dotenv()
 
 logger = logging.getLogger(__name__)
-_engine= None
-
+ENGINE = None
 
 def get_engine():
-    global _engine
-    if _engine is None:
+    """Creates connection engine"""
+    global ENGINE
+    if ENGINE is None:
         db_user = os.getenv("DB_USER")
         db_password = os.getenv("DB_PASSWORD")
         db_host = os.getenv("DB_HOST")
@@ -20,20 +22,22 @@ def get_engine():
         if not all([db_user, db_password, db_host, db_name]):
             raise ValueError("Database credentials are not fully set in environment variables.")
 
-        _engine = create_engine(
+        # Assign to the global ENGINE
+        ENGINE = create_engine(
             f"mysql+pymysql://{db_user}:{db_password}@{db_host}/{db_name}",
             echo=True,           # optional: logs SQL statements
             pool_pre_ping=True
         )
-        print([db_user,db_host,db_name])
+        print([db_user, db_host, db_name])
         logger.info("Database engine created successfully.")
-    return _engine
+    return ENGINE
 
 def shutdown():
-    global _engine
-    if _engine:
-        _engine.dispose()
+    """Shuts down created connection engine"""
+    global ENGINE
+    if ENGINE:
+        ENGINE.dispose()
         logger.info("Database engine disposed.")
-        _engine = None
+        ENGINE = None
 
 get_engine()

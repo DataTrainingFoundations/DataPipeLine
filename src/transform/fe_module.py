@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 from dotenv import load_dotenv
-from src.transform.validation import validation
+from src.transform.validation import Validation
 
 load_dotenv()
 team_cols = os.getenv('TEAM_COLS').split('|')
@@ -16,7 +16,7 @@ def team_table(df):
         'team_id': 'ignore'
     })
 
-    valid, rejected = validation.valid_columns(t_table, team_cols)
+    valid, rejected = Validation.valid_columns(t_table, team_cols)
 
     return valid
 
@@ -32,7 +32,7 @@ def game_table(df):
     g_table = df.rename(columns = {
         'season': 'season_id'
     })
-    valid, rejected = validation.valid_columns(g_table, game_cols)
+    valid, rejected = Validation.valid_columns(g_table, game_cols)
     valid['game_id'] = valid['season_id'].astype(str) + '_' + valid['week'].astype(str) + '_' + valid['home_team']
 
 
@@ -99,6 +99,6 @@ def facts_table(stats_df, schedule_df):
         'rushing_tds': 'rush_tds'
     })
 
-    valid, rejected = validation.valid_columns(final_table, fact_cols)
+    valid, rejected = Validation.valid_columns(final_table, fact_cols)
 
     return valid
