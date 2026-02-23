@@ -24,6 +24,9 @@ engine = get_engine()
 st.set_page_config(layout="wide", page_title='NFL Analytics Platform')
 st.title('🏈 NFL Offensive Analysis', text_alignment = 'center')
 
+if st.session_state.updated is not None:
+    st.text(f"Last updated: {st.session_state.updated}")
+
 #SESSION STATES
 if 'team_table' not in st.session_state:
     st.session_state.team_table = None
@@ -90,7 +93,7 @@ def get_season_view(df, start_year, end_year):
     season_df["avg_rush_pct"] *= 100
 
     new_season_df = season_df.dropna()
-    return season_df
+    return new_season_df
 
 
 def get_team_view(df, year):
@@ -115,6 +118,20 @@ def get_team_view(df, year):
     team_df["made_playoffs"] = team_df["game_type"].apply(
         lambda games: any(g != "REG" for g in games)
     )
+
+    team_df["made_superbowl"] = team_df["game_type"].apply(
+        lambda games: any(g == "SB" for g in games)
+    )
+
+    def get_status(row):
+        if row["made_superbowl"]:
+            return "Super Bowl"
+        elif row["made_playoffs"]:
+            return "Playoffs"
+        else:
+            return "Regular Season"
+        
+    team_df["season_status"] = team_df.apply(get_status, axis=1)
 
     team_df['pass_percentage'] = (team_df['pass_attempts'] / (team_df['pass_attempts'] + team_df['rush_attempts'])) * 100
     team_df['rush_percentage'] = (team_df['rush_attempts'] / (team_df['pass_attempts'] + team_df['rush_attempts'])) * 100
@@ -151,7 +168,7 @@ def calculate_win_pct(results):
     return (wins + 0.5 * ties) / total
  
 
-def chart_builder(df, x_axis=None):
+def chart_builder(df, x_axis=None, compare = False):
 
     if df.empty:
         st.warning("No data available for selected filters.")
@@ -165,27 +182,41 @@ def chart_builder(df, x_axis=None):
         if col != x_axis
     ]
 
-    y_axis = st.selectbox("Select Y-Axis", y_options)
+    if compare:
+        y_axis = st.multiselect(
+            "Select Metrics to Compare",
+            y_options,
+            default=y_options[:2]
+        )
+
+        if len(y_axis) < 2:
+            st.warning("Select at least two metrics.")
+            st.stop()
+    else:
+        y_axis = st.selectbox("Select Y-Axis", y_options)
 
     graph_type = st.selectbox(
         "Select Chart Type",
         ["Bar", "Line", "Scatter", "Histogram"]
     )
 
-    # 🎯 Playoff Highlight Colors
-    has_playoff_col = "made_playoffs" in df.columns
+    has_status_col = "season_status" in df.columns
 
-    color_map = {True: "#d62728", False: "#1f77b4"}  # red / blue
+    color_map = {
+        "Super Bowl": "#FFD700",     # gold
+        "Playoffs": "#d62728",       # red
+        "Regular Season": "#1f77b4"  # blue
+    }
 
     # ---------- BAR ----------
     if graph_type == "Bar":
 
-        if has_playoff_col:
+        if has_status_col:
             fig = px.bar(
                 df,
                 x=x_axis,
                 y=y_axis,
-                color="made_playoffs",
+                color="season_status",
                 color_discrete_map=color_map,
                 hover_data=df.columns
             )
@@ -200,17 +231,26 @@ def chart_builder(df, x_axis=None):
     # ---------- LINE ----------
     elif graph_type == "Line":
 
-        fig = px.line(
-            df,
-            x=x_axis,
-            y=y_axis,
-            hover_data=df.columns
-        )
+        if isinstance(y_axis, list):
+            fig = px.line(
+                df,
+                x=x_axis,
+                y=y_axis,
+                markers=True
+            )
+        else:
+            fig = px.line(
+                df,
+                x=x_axis,
+                y=y_axis,
+                markers=True,
+                hover_data=df.columns
+            )
 
     # ---------- SCATTER ----------
     elif graph_type == "Scatter":
 
-        if has_playoff_col:
+        if has_status_col:
             base_size = 14
             playoff_boost = 2
 
@@ -223,7 +263,7 @@ def chart_builder(df, x_axis=None):
                 df,
                 x=x_axis,
                 y=y_axis,
-                color="made_playoffs",
+                color="season_status",
                 size=sizes,
                 size_max=18,
                 color_discrete_map=color_map,
@@ -287,8 +327,10 @@ with tab2:
                     (1999, 2025)
                 )
 
+                compare_mode = st.toggle("Compare Multiple Metrics")
+
                 df_view = get_season_view(nfl_facts, start_year, end_year)
-                chart = chart_builder(df_view, 'season_id')
+                chart = chart_builder(df_view, 'season_id', compare_mode)
             elif option == "Team":
                 year = st.selectbox(
                     "Select Season",
