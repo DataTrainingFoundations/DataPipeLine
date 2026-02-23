@@ -133,6 +133,8 @@ def get_team_view(df, year):
 
     team_df['pass_percentage'] = (team_df['pass_attempts'] / (team_df['pass_attempts'] + team_df['rush_attempts'])) * 100
     team_df['rush_percentage'] = (team_df['rush_attempts'] / (team_df['pass_attempts'] + team_df['rush_attempts'])) * 100
+    team_df['pass_efficiency'] = (team_df['pass_yards'] / (team_df['pass_attempts']))
+    team_df['rush_efficiency'] = (team_df['rush_yards'] / (team_df['rush_attempts']))
     team_df['pass_td_percentage'] = (team_df['pass_tds'] / (team_df['pass_tds'] + team_df['rush_tds'])) * 100
     team_df['rush_td_percentage'] = (team_df['rush_tds'] / (team_df['pass_tds'] + team_df['rush_tds'])) * 100
 
@@ -161,7 +163,7 @@ def calculate_win_pct(results):
     if total == 0:
         return 0
 
-    return (wins + 0.5 * ties) / total
+    return ((wins + 0.5 * ties) / total) * 100
 
 def chart_builder(df, x_axis=None, compare = False):
 
@@ -192,7 +194,7 @@ def chart_builder(df, x_axis=None, compare = False):
 
     graph_type = st.selectbox(
         "Select Chart Type",
-        ["Bar", "Line", "Scatter", "Histogram"]
+        ["Bar", "Line", "Scatter", "Histogram", "Correlation Matrix"]
     )
 
     has_status_col = "season_status" in df.columns
@@ -279,6 +281,21 @@ def chart_builder(df, x_axis=None, compare = False):
             df,
             x=y_axis
         )
+    
+    elif graph_type == "Correlation Matrix":
+        # Only use numeric columns
+        numeric_cols = df.select_dtypes(include="number").columns.tolist()
+    
+        selected_cols = st.multiselect("Select metrics for correlation", numeric_cols, default=numeric_cols)
+        
+        if len(selected_cols) < 2:
+            st.warning("Select at least two metrics")
+            return
+        
+        corr = df[selected_cols].corr()
+        
+        fig = px.imshow(corr, text_auto=True, color_continuous_scale='RdBu_r', origin='lower', aspect="auto")
+        fig.update_layout(title="Correlation Matrix", template="plotly_white")
 
     fig.update_layout(template="plotly_white")
 

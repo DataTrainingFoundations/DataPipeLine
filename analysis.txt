@@ -37,20 +37,9 @@ Questions:
 
 7. Are bad teams run-heavy because they’re losing, or vice versa?
 
-Other questions we could possibly answer but would need more data:
-- Do teams rush more if they are winning?
-
 Other graphs that could be useful:
 - Pass TD rate vs Rush TD rate vs Wins
 - Correlation matrix between pass attempts, rush attempts, yards per pass, yards per rush, wins
-
-What we need to get/calculate:
-- GET: team wins, playoff teams
-- CALCULATE: pass %(pass attempts / pass + rush attempts), rush %(rush attempts / pass + rush attempts), 
-yards per pass(pass yards / pass attempts), yards per rush(rush yards / rush attempts), 
-win %(wins / wins + losses)
-- AVERAGES: pass attempts, rush attempts, pass yards, rush yards
-- Make team_id column for feature engineering
 
 What we could conclude:
 - The league has gotten more pass heavy
