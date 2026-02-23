@@ -40,4 +40,4 @@ class DataExtractor:
         else:
             print('File not in json or csv format')
             return None
-    
+
