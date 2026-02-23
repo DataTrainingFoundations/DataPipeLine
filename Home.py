@@ -21,7 +21,10 @@ st.title('🏈 NFL Offensive Analysis', text_alignment = 'center')
 
 # SESSION STATES
 if 'updated' not in st.session_state:
-    st.session_state.updated = None
+    st.session_state.updated = True
+
+if 'last_update' not in st.session_state:
+    st.session_state.last_update = None
 
 if 'team_table' not in st.session_state:
     st.session_state.team_table = None
@@ -35,29 +38,25 @@ if 'season_table' not in st.session_state:
 if 'nfl_facts_table' not in st.session_state:
     st.session_state.nfl_facts_table = None
 
-if st.session_state.updated is not None:
-    st.text(f"Last updated: {st.session_state.updated}")
+if st.session_state.last_update is not None:
+    st.text(f"Last updated: {st.session_state.last_update}")
 
 # Querys for tables
-@st.cache_data
 def query_teams():
     with engine.connect() as connection:
         query = "SELECT * FROM team"
         result = pd.read_sql(query, connection)
         return result 
-@st.cache_data
 def query_seasons():
     with engine.connect() as connection:
         query = "SELECT * FROM season"
         result = pd.read_sql(query, connection)
         return result   
-@st.cache_data
 def query_games():
     with engine.connect() as connection:
         query = "SELECT * FROM game"
         result = pd.read_sql(query, connection)
         return result   
-@st.cache_data
 def query_nfl_facts():
     with engine.connect() as connection:
         query = "SELECT * FROM nfl_facts"
@@ -291,22 +290,29 @@ tab1, tab2 = st.tabs(['Data Preview', 'Chart Builder'])
 with tab1:
     table1, table2, table3, table4 = st.tabs(['team_table', 'season_table', 'game_table', 'nfl_facts_table'])
     with table1:
-        team = query_teams()
-        st.dataframe(team, width = 'content')
-        st.session_state.team_table = team
+        if st.session_state.updated:
+            team = query_teams()
+            st.dataframe(team, width = 'content')
+            st.session_state.team_table = team
+            st.session_updated = False
     with table2:
-        season = query_seasons()
-        st.dataframe(season, width = 'content')
-        st.session_state.season_table = season
+        if st.session_state.updated:
+            season = query_seasons()
+            st.dataframe(season, width = 'content')
+            st.session_state.season_table = season
+            st.session_updated = False
     with table3:
-        game = query_games()
-        st.dataframe(game, width = 'content')
-        st.session_state.game_table = game
+        if st.session_state.updated:
+            game = query_games()
+            st.dataframe(game, width = 'content')
+            st.session_state.game_table = game
+            st.session_updated = False
     with table4:
-        nfl_facts = query_nfl_facts()
-        print(nfl_facts)
-        st.dataframe(nfl_facts, width = 'content')
-        st.session_state.nfl_facts_table = nfl_facts
+        if st.session_state.updated:
+            nfl_facts = query_nfl_facts()
+            st.dataframe(nfl_facts, width = 'content')
+            st.session_state.nfl_facts_table = nfl_facts
+            st.session_updated = False
 
 with tab2:
     col1, col2 = st.columns([3, 1], border = True)

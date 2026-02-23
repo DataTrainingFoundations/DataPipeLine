@@ -13413,6 +13413,7 @@
 2026-02-23 11:59:43,934 - INFO: SELECT * FROM nfl_facts
 2026-02-23 11:59:43,934 - INFO: [raw sql] {}
 2026-02-23 11:59:44,518 - INFO: ROLLBACK
+<<<<<<< HEAD
 2026-02-23 13:08:08,341 - INFO: Database engine created successfully.
 2026-02-23 13:08:08,587 - INFO: SELECT DATABASE()
 2026-02-23 13:08:08,587 - INFO: [raw sql] {}
@@ -14365,3 +14366,285 @@
 2026-02-23 13:20:54,125 - INFO: [cached since 18.84s ago] [{'season_id': 2024, 'team_id': 'ARI', 'game_id': '2024_1_ARI', 'week': 1, 'game_type': 'REG', 'pass_attempts': 31, 'rush_attempts': 25, 'pass_yards': 162, 'rush_yards': 124, 'pass_tds': 1, 'rush_tds': 1, 'points_scored': 28, 'points_allowed': 34, 'result': 'L'}, {'season_id': 2024, 'team_id': 'ATL', 'game_id': '2024_1_ATL', 'week': 1, 'game_type': 'REG', 'pass_attempts': 26, 'rush_attempts': 22, 'pass_yards': 155, 'rush_yards': 89, 'pass_tds': 1, 'rush_tds': 0, 'points_scored': 10, 'points_allowed': 18, 'result': 'L'}, {'season_id': 2024, 'team_id': 'BAL', 'game_id': '2024_1_BAL', 'week': 1, 'game_type': 'REG', 'pass_attempts': 41, 'rush_attempts': 32, 'pass_yards': 273, 'rush_yards': 185, 'pass_tds': 1, 'rush_tds': 1, 'points_scored': 20, 'points_allowed': 27, 'result': 'L'}, {'season_id': 2024, 'team_id': 'BUF', 'game_id': '2024_1_BUF', 'week': 1, 'game_type': 'REG', 'pass_attempts': 23, 'rush_attempts': 33, 'pass_yards': 232, 'rush_yards': 130, 'pass_tds': 2, 'rush_tds': 2, 'points_scored': 34, 'points_allowed': 28, 'result': 'W'}, {'season_id': 2024, 'team_id': 'CAR', 'game_id': '2024_1_CAR', 'week': 1, 'game_type': 'REG', 'pass_attempts': 31, 'rush_attempts': 20, 'pass_yards': 161, 'rush_yards': 58, 'pass_tds': 0, 'rush_tds': 1, 'points_scored': 10, 'points_allowed': 47, 'result': 'L'}, {'season_id': 2024, 'team_id': 'CHI', 'game_id': '2024_1_CHI', 'week': 1, 'game_type': 'REG', 'pass_attempts': 29, 'rush_attempts': 22, 'pass_yards': 93, 'rush_yards': 84, 'pass_tds': 0, 'rush_tds': 0, 'points_scored': 24, 'points_allowed': 17, 'result': 'W'}, {'season_id': 2024, 'team_id': 'CIN', 'game_id': '2024_1_CIN', 'week': 1, 'game_type': 'REG', 'pass_attempts': 29, 'rush_attempts': 16, 'pass_yards': 164, 'rush_yards': 70, 'pass_tds': 0, 'rush_tds': 1, 'points_scored': 10, 'points_allowed': 16, 'result': 'L'}, {'season_id': 2024, 'team_id': 'CLE', 'game_id': '2024_1_CLE', 'week': 1, 'game_type': 'REG', 'pass_attempts': 45, 'rush_attempts': 19, 'pass_yards': 169, 'rush_yards': 93, 'pass_tds': 1, 'rush_tds': 1, 'points_scored': 17, 'points_allowed': 33, 'result': 'L'}  ... displaying 10 of 570 total bound parameter sets ...  {'season_id': 2024, 'team_id': 'KC', 'game_id': '2024_22_KC', 'week': 22, 'game_type': 'SB', 'pass_attempts': 32, 'rush_attempts': 11, 'pass_yards': 257, 'rush_yards': 49, 'pass_tds': 3, 'rush_tds': 0, 'points_scored': 22, 'points_allowed': 40, 'result': 'L'}, {'season_id': 2024, 'team_id': 'PHI', 'game_id': '2024_22_PHI', 'week': 22, 'game_type': 'SB', 'pass_attempts': 23, 'rush_attempts': 45, 'pass_yards': 221, 'rush_yards': 135, 'pass_tds': 2, 'rush_tds': 1, 'points_scored': 40, 'points_allowed': 22, 'result': 'W'}]
 2026-02-23 13:20:54,138 - INFO: COMMIT
 2026-02-23 13:20:54,139 - INFO: Inserted 570 rows into 'nfl_facts' successfully.
+=======
+2026-02-23 13:07:04,214 - INFO: Database engine created successfully.
+2026-02-23 13:07:26,551 - INFO: Database engine created successfully.
+2026-02-23 13:07:39,569 - DEBUG: Starting new HTTPS connection (1): github.com:443
+2026-02-23 13:07:40,571 - DEBUG: https://github.com:443 "GET /nflverse/nflverse-data/releases/download/teams/teams_colors_logos.parquet HTTP/1.1" 302 0
+2026-02-23 13:07:40,578 - DEBUG: Starting new HTTPS connection (1): release-assets.githubusercontent.com:443
+2026-02-23 13:07:41,290 - DEBUG: https://release-assets.githubusercontent.com:443 "GET /github-production-release-asset/452908115/3219b65c-27fb-4641-9f4d-fb6d9fa9af51?sp=r&sv=2018-11-09&sr=b&spr=https&se=2026-02-23T18%3A50%3A57Z&rscd=attachment%3B+filename%3Dteams_colors_logos.parquet&rsct=application%2Foctet-stream&skoid=96c2d410-5711-43a1-aedd-ab1947aa7ab0&sktid=398a6654-997b-47e9-b12b-9515b896b4de&skt=2026-02-23T17%3A50%3A09Z&ske=2026-02-23T18%3A50%3A57Z&sks=b&skv=2018-11-09&sig=OTJ2sqmStdS6RBE6vhLppBDqPvydRxniGKRW%2Bo9XFaU%3D&jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmVsZWFzZS1hc3NldHMuZ2l0aHVidXNlcmNvbnRlbnQuY29tIiwia2V5Ijoia2V5MSIsImV4cCI6MTc3MTg3MDM0NywibmJmIjoxNzcxODcwMDQ3LCJwYXRoIjoicmVsZWFzZWFzc2V0cHJvZHVjdGlvbi5ibG9iLmNvcmUud2luZG93cy5uZXQifQ.G4bwzQmVJ9EbhUZTukaBRxsIWTZgIzW_dtY5wDuYIC0&response-content-disposition=attachment%3B%20filename%3Dteams_colors_logos.parquet&response-content-type=application%2Foctet-stream HTTP/1.1" 200 12821
+2026-02-23 13:07:41,487 - DEBUG: %s finished extracting teams
+2026-02-23 13:07:41,707 - DEBUG: https://github.com:443 "GET /nflverse/nflverse-data/releases/download/stats_team/stats_team_week_2025.parquet HTTP/1.1" 302 0
+2026-02-23 13:07:41,718 - DEBUG: https://release-assets.githubusercontent.com:443 "GET /github-production-release-asset/452908115/175cc9d5-9cbb-45c7-baaf-e84b2125b9ff?sp=r&sv=2018-11-09&sr=b&spr=https&se=2026-02-23T18%3A50%3A12Z&rscd=attachment%3B+filename%3Dstats_team_week_2025.parquet&rsct=application%2Foctet-stream&skoid=96c2d410-5711-43a1-aedd-ab1947aa7ab0&sktid=398a6654-997b-47e9-b12b-9515b896b4de&skt=2026-02-23T17%3A50%3A06Z&ske=2026-02-23T18%3A50%3A12Z&sks=b&skv=2018-11-09&sig=19fBwhM2BDjh%2B7LJ4YpaIdPqmQNEeGqfp85Lpr64VrU%3D&jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmVsZWFzZS1hc3NldHMuZ2l0aHVidXNlcmNvbnRlbnQuY29tIiwia2V5Ijoia2V5MSIsImV4cCI6MTc3MTg3MDM0OCwibmJmIjoxNzcxODcwMDQ4LCJwYXRoIjoicmVsZWFzZWFzc2V0cHJvZHVjdGlvbi5ibG9iLmNvcmUud2luZG93cy5uZXQifQ.ghXU978m-ferbfrmkGy-NCnZOnBBQ57eiXuZtPvH1-c&response-content-disposition=attachment%3B%20filename%3Dstats_team_week_2025.parquet&response-content-type=application%2Foctet-stream HTTP/1.1" 200 104305
+2026-02-23 13:07:41,862 - DEBUG: %s finished extracting {year} team stats
+2026-02-23 13:07:42,077 - DEBUG: https://github.com:443 "GET /nflverse/nflverse-data/releases/download/schedules/games.parquet HTTP/1.1" 302 0
+2026-02-23 13:07:42,103 - DEBUG: https://release-assets.githubusercontent.com:443 "GET /github-production-release-asset/452908115/28e3adae-7660-44b7-ac7f-17934e5298b5?sp=r&sv=2018-11-09&sr=b&spr=https&se=2026-02-23T18%3A51%3A01Z&rscd=attachment%3B+filename%3Dgames.parquet&rsct=application%2Foctet-stream&skoid=96c2d410-5711-43a1-aedd-ab1947aa7ab0&sktid=398a6654-997b-47e9-b12b-9515b896b4de&skt=2026-02-23T17%3A50%3A12Z&ske=2026-02-23T18%3A51%3A01Z&sks=b&skv=2018-11-09&sig=bYSaa%2BOo3VWN4g6lMLGru3bvHkqO1HwaU7prybLP7cU%3D&jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmVsZWFzZS1hc3NldHMuZ2l0aHVidXNlcmNvbnRlbnQuY29tIiwia2V5Ijoia2V5MSIsImV4cCI6MTc3MTg3MDM0OSwibmJmIjoxNzcxODcwMDQ5LCJwYXRoIjoicmVsZWFzZWFzc2V0cHJvZHVjdGlvbi5ibG9iLmNvcmUud2luZG93cy5uZXQifQ.QDYnSPEyAhQNGYJIqAFVsOWvOHFNVY_cui6oiMQYths&response-content-disposition=attachment%3B%20filename%3Dgames.parquet&response-content-type=application%2Foctet-stream HTTP/1.1" 200 506547
+2026-02-23 13:07:42,263 - DEBUG: %s finished extracting {year} schedule
+2026-02-23 13:07:42,274 - INFO: Validating columns | requested=4 | available=16
+2026-02-23 13:07:42,274 - INFO: Total columns chosen: 4
+2026-02-23 13:07:42,280 - INFO: Column validation complete | chosen_cols=4 | rejected_cols=12
+2026-02-23 13:07:42,281 - INFO: Validating columns | requested=6 | available=46
+2026-02-23 13:07:42,281 - INFO: Total columns chosen: 6
+2026-02-23 13:07:42,285 - INFO: Column validation complete | chosen_cols=6 | rejected_cols=40
+2026-02-23 13:07:42,474 - INFO: Validating columns | requested=15 | available=112
+2026-02-23 13:07:42,474 - INFO: Total columns chosen: 14
+2026-02-23 13:07:42,475 - INFO: Column validation complete | chosen_cols=14 | rejected_cols=98
+2026-02-23 13:07:42,584 - INFO: SELECT DATABASE()
+2026-02-23 13:07:42,585 - INFO: [raw sql] {}
+2026-02-23 13:07:42,588 - INFO: SELECT @@sql_mode
+2026-02-23 13:07:42,589 - INFO: [raw sql] {}
+2026-02-23 13:07:42,589 - INFO: SELECT @@lower_case_table_names
+2026-02-23 13:07:42,590 - INFO: [raw sql] {}
+2026-02-23 13:07:42,595 - INFO: BEGIN (implicit)
+2026-02-23 13:07:42,595 - INFO: DESCRIBE `nfl_data`.`team`
+2026-02-23 13:07:42,596 - INFO: [raw sql] {}
+2026-02-23 13:07:42,643 - INFO: ROLLBACK
+2026-02-23 13:07:42,645 - INFO: Table 'team' already exists. Skipping creation.
+2026-02-23 13:07:42,646 - INFO: BEGIN (implicit)
+2026-02-23 13:07:42,646 - INFO: DESCRIBE `nfl_data`.`season`
+2026-02-23 13:07:42,646 - INFO: [raw sql] {}
+2026-02-23 13:07:42,649 - INFO: ROLLBACK
+2026-02-23 13:07:42,650 - INFO: Table 'season' already exists. Skipping creation.
+2026-02-23 13:07:42,651 - INFO: BEGIN (implicit)
+2026-02-23 13:07:42,651 - INFO: DESCRIBE `nfl_data`.`game`
+2026-02-23 13:07:42,652 - INFO: [raw sql] {}
+2026-02-23 13:07:42,655 - INFO: ROLLBACK
+2026-02-23 13:07:42,656 - INFO: Table 'game' already exists. Skipping creation.
+2026-02-23 13:07:42,656 - INFO: BEGIN (implicit)
+2026-02-23 13:07:42,657 - INFO: DESCRIBE `nfl_data`.`nfl_facts`
+2026-02-23 13:07:42,657 - INFO: [raw sql] {}
+2026-02-23 13:07:42,661 - INFO: ROLLBACK
+2026-02-23 13:07:42,662 - INFO: Table 'nfl_facts' already exists. Skipping creation.
+2026-02-23 13:07:42,675 - INFO: BEGIN (implicit)
+2026-02-23 13:07:42,678 - INFO: INSERT INTO team (`team_id`, `team_name`, `team_conf`, `team_division`)
+                    VALUES (%(team_id)s, %(team_name)s, %(team_conf)s, %(team_division)s)
+                    ON DUPLICATE KEY UPDATE `team_name`=VALUES(`team_name`), `team_conf`=VALUES(`team_conf`), `team_division`=VALUES(`team_division`);
+2026-02-23 13:07:42,679 - INFO: [generated in 0.00084s] [{'team_id': 'ARI', 'team_name': 'Arizona Cardinals', 'team_conf': 'NFC', 'team_division': 'NFC West'}, {'team_id': 'ATL', 'team_name': 'Atlanta Falcons', 'team_conf': 'NFC', 'team_division': 'NFC South'}, {'team_id': 'BAL', 'team_name': 'Baltimore Ravens', 'team_conf': 'AFC', 'team_division': 'AFC North'}, {'team_id': 'BUF', 'team_name': 'Buffalo Bills', 'team_conf': 'AFC', 'team_division': 'AFC East'}, {'team_id': 'CAR', 'team_name': 'Carolina Panthers', 'team_conf': 'NFC', 'team_division': 'NFC South'}, {'team_id': 'CHI', 'team_name': 'Chicago Bears', 'team_conf': 'NFC', 'team_division': 'NFC North'}, {'team_id': 'CIN', 'team_name': 'Cincinnati Bengals', 'team_conf': 'AFC', 'team_division': 'AFC North'}, {'team_id': 'CLE', 'team_name': 'Cleveland Browns', 'team_conf': 'AFC', 'team_division': 'AFC North'}  ... displaying 10 of 32 total bound parameter sets ...  {'team_id': 'TEN', 'team_name': 'Tennessee Titans', 'team_conf': 'AFC', 'team_division': 'AFC South'}, {'team_id': 'WAS', 'team_name': 'Washington Commanders', 'team_conf': 'NFC', 'team_division': 'NFC East'}]
+2026-02-23 13:07:42,703 - INFO: COMMIT
+2026-02-23 13:07:42,705 - INFO: Inserted 32 rows into 'team' successfully.
+2026-02-23 13:07:42,706 - INFO: BEGIN (implicit)
+2026-02-23 13:07:42,707 - INFO: INSERT INTO season (`season_id`, `num_games`)
+                    VALUES (%(season_id)s, %(num_games)s)
+                    ON DUPLICATE KEY UPDATE `num_games`=VALUES(`num_games`);
+2026-02-23 13:07:42,707 - INFO: [generated in 0.00034s] {'season_id': 2025, 'num_games': 17}
+2026-02-23 13:07:42,710 - INFO: COMMIT
+2026-02-23 13:07:42,711 - INFO: Inserted 1 rows into 'season' successfully.
+2026-02-23 13:07:42,714 - INFO: BEGIN (implicit)
+2026-02-23 13:07:42,718 - INFO: INSERT INTO game (`season_id`, `week`, `home_team`, `game_type`, `location`, `stadium`, `game_id`)
+                    VALUES (%(season_id)s, %(week)s, %(home_team)s, %(game_type)s, %(location)s, %(stadium)s, %(game_id)s)
+                    ON DUPLICATE KEY UPDATE `season_id`=VALUES(`season_id`), `week`=VALUES(`week`), `home_team`=VALUES(`home_team`), `game_type`=VALUES(`game_type`), `location`=VALUES(`location`), `stadium`=VALUES(`stadium`);
+2026-02-23 13:07:42,718 - INFO: [generated in 0.00325s] [{'season_id': 2025, 'week': 1, 'home_team': 'PHI', 'game_type': 'REG', 'location': 'Home', 'stadium': 'Lincoln Financial Field', 'game_id': '2025_1_PHI'}, {'season_id': 2025, 'week': 1, 'home_team': 'LAC', 'game_type': 'REG', 'location': 'Neutral', 'stadium': 'SoFi Stadium', 'game_id': '2025_1_LAC'}, {'season_id': 2025, 'week': 1, 'home_team': 'ATL', 'game_type': 'REG', 'location': 'Home', 'stadium': 'Mercedes-Benz Stadium', 'game_id': '2025_1_ATL'}, {'season_id': 2025, 'week': 1, 'home_team': 'CLE', 'game_type': 'REG', 'location': 'Home', 'stadium': 'FirstEnergy Stadium', 'game_id': '2025_1_CLE'}, {'season_id': 2025, 'week': 1, 'home_team': 'IND', 'game_type': 'REG', 'location': 'Home', 'stadium': 'Lucas Oil Stadium', 'game_id': '2025_1_IND'}, {'season_id': 2025, 'week': 1, 'home_team': 'JAX', 'game_type': 'REG', 'location': 'Home', 'stadium': 'TIAA Bank Stadium', 'game_id': '2025_1_JAX'}, {'season_id': 2025, 'week': 1, 'home_team': 'NE', 'game_type': 'REG', 'location': 'Home', 'stadium': 'Gillette Stadium', 'game_id': '2025_1_NE'}, {'season_id': 2025, 'week': 1, 'home_team': 'NO', 'game_type': 'REG', 'location': 'Home', 'stadium': 'Mercedes-Benz Superdome', 'game_id': '2025_1_NO'}  ... displaying 10 of 285 total bound parameter sets ...  {'season_id': 2025, 'week': 21, 'home_team': 'SEA', 'game_type': 'CON', 'location': 'Home', 'stadium': 'Lumen Field', 'game_id': '2025_21_SEA'}, {'season_id': 2025, 'week': 22, 'home_team': 'NE', 'game_type': 'SB', 'location': 'Neutral', 'stadium': "Levi's Stadium", 'game_id': '2025_22_NE'}]
+2026-02-23 13:07:42,741 - INFO: COMMIT
+2026-02-23 13:07:42,741 - INFO: Inserted 285 rows into 'game' successfully.
+2026-02-23 13:07:42,750 - INFO: BEGIN (implicit)
+2026-02-23 13:07:42,763 - INFO: INSERT INTO nfl_facts (`season_id`, `team_id`, `game_id`, `week`, `game_type`, `pass_attempts`, `rush_attempts`, `pass_yards`, `rush_yards`, `pass_tds`, `rush_tds`, `points_scored`, `points_allowed`, `result`)
+                    VALUES (%(season_id)s, %(team_id)s, %(game_id)s, %(week)s, %(game_type)s, %(pass_attempts)s, %(rush_attempts)s, %(pass_yards)s, %(rush_yards)s, %(pass_tds)s, %(rush_tds)s, %(points_scored)s, %(points_allowed)s, %(result)s)
+                    ON DUPLICATE KEY UPDATE `season_id`=VALUES(`season_id`), `team_id`=VALUES(`team_id`), `week`=VALUES(`week`), `game_type`=VALUES(`game_type`), `pass_attempts`=VALUES(`pass_attempts`), `rush_attempts`=VALUES(`rush_attempts`), `pass_yards`=VALUES(`pass_yards`), `rush_yards`=VALUES(`rush_yards`), `pass_tds`=VALUES(`pass_tds`), `rush_tds`=VALUES(`rush_tds`), `points_scored`=VALUES(`points_scored`), `points_allowed`=VALUES(`points_allowed`), `result`=VALUES(`result`);
+2026-02-23 13:07:42,764 - INFO: [generated in 0.01209s] [{'season_id': 2025, 'team_id': 'ARI', 'game_id': '2025_1_ARI', 'week': 1, 'game_type': 'REG', 'pass_attempts': 29, 'rush_attempts': 27, 'pass_yards': 163, 'rush_yards': 146, 'pass_tds': 2, 'rush_tds': 0, 'points_scored': 20, 'points_allowed': 13, 'result': 'W'}, {'season_id': 2025, 'team_id': 'ATL', 'game_id': '2025_1_ATL', 'week': 1, 'game_type': 'REG', 'pass_attempts': 42, 'rush_attempts': 28, 'pass_yards': 298, 'rush_yards': 69, 'pass_tds': 1, 'rush_tds': 1, 'points_scored': 20, 'points_allowed': 23, 'result': 'L'}, {'season_id': 2025, 'team_id': 'BAL', 'game_id': '2025_1_BAL', 'week': 1, 'game_type': 'REG', 'pass_attempts': 19, 'rush_attempts': 29, 'pass_yards': 209, 'rush_yards': 238, 'pass_tds': 2, 'rush_tds': 3, 'points_scored': 40, 'points_allowed': 41, 'result': 'L'}, {'season_id': 2025, 'team_id': 'BUF', 'game_id': '2025_1_BUF', 'week': 1, 'game_type': 'REG', 'pass_attempts': 46, 'rush_attempts': 31, 'pass_yards': 394, 'rush_yards': 108, 'pass_tds': 2, 'rush_tds': 3, 'points_scored': 41, 'points_allowed': 40, 'result': 'W'}, {'season_id': 2025, 'team_id': 'CAR', 'game_id': '2025_1_CAR', 'week': 1, 'game_type': 'REG', 'pass_attempts': 35, 'rush_attempts': 25, 'pass_yards': 154, 'rush_yards': 113, 'pass_tds': 1, 'rush_tds': 0, 'points_scored': 10, 'points_allowed': 26, 'result': 'L'}, {'season_id': 2025, 'team_id': 'CHI', 'game_id': '2025_1_CHI', 'week': 1, 'game_type': 'REG', 'pass_attempts': 35, 'rush_attempts': 26, 'pass_yards': 210, 'rush_yards': 119, 'pass_tds': 1, 'rush_tds': 1, 'points_scored': 24, 'points_allowed': 27, 'result': 'L'}, {'season_id': 2025, 'team_id': 'CIN', 'game_id': '2025_1_CIN', 'week': 1, 'game_type': 'REG', 'pass_attempts': 23, 'rush_attempts': 23, 'pass_yards': 113, 'rush_yards': 46, 'pass_tds': 1, 'rush_tds': 1, 'points_scored': 17, 'points_allowed': 16, 'result': 'W'}, {'season_id': 2025, 'team_id': 'CLE', 'game_id': '2025_1_CLE', 'week': 1, 'game_type': 'REG', 'pass_attempts': 45, 'rush_attempts': 24, 'pass_yards': 290, 'rush_yards': 49, 'pass_tds': 1, 'rush_tds': 1, 'points_scored': 16, 'points_allowed': 17, 'result': 'L'}  ... displaying 10 of 570 total bound parameter sets ...  {'season_id': 2025, 'team_id': 'NE', 'game_id': '2025_22_NE', 'week': 22, 'game_type': 'SB', 'pass_attempts': 43, 'rush_attempts': 18, 'pass_yards': 295, 'rush_yards': 79, 'pass_tds': 2, 'rush_tds': 0, 'points_scored': 13, 'points_allowed': 29, 'result': 'L'}, {'season_id': 2025, 'team_id': 'SEA', 'game_id': '2025_22_SEA', 'week': 22, 'game_type': 'SB', 'pass_attempts': 38, 'rush_attempts': 32, 'pass_yards': 202, 'rush_yards': 141, 'pass_tds': 1, 'rush_tds': 0, 'points_scored': 29, 'points_allowed': 13, 'result': 'W'}]
+2026-02-23 13:07:42,842 - INFO: COMMIT
+2026-02-23 13:07:42,843 - INFO: Inserted 570 rows into 'nfl_facts' successfully.
+2026-02-23 13:07:45,036 - INFO: BEGIN (implicit)
+2026-02-23 13:07:45,036 - INFO: DESCRIBE `nfl_data`.`SELECT * FROM team`
+2026-02-23 13:07:45,037 - INFO: [raw sql] {}
+2026-02-23 13:07:45,067 - INFO: SELECT * FROM team
+2026-02-23 13:07:45,067 - INFO: [raw sql] {}
+2026-02-23 13:07:45,070 - INFO: ROLLBACK
+2026-02-23 13:07:45,076 - INFO: BEGIN (implicit)
+2026-02-23 13:07:45,076 - INFO: DESCRIBE `nfl_data`.`SELECT * FROM season`
+2026-02-23 13:07:45,077 - INFO: [raw sql] {}
+2026-02-23 13:07:45,078 - INFO: SELECT * FROM season
+2026-02-23 13:07:45,079 - INFO: [raw sql] {}
+2026-02-23 13:07:45,081 - INFO: ROLLBACK
+2026-02-23 13:07:45,083 - INFO: BEGIN (implicit)
+2026-02-23 13:07:45,084 - INFO: DESCRIBE `nfl_data`.`SELECT * FROM game`
+2026-02-23 13:07:45,084 - INFO: [raw sql] {}
+2026-02-23 13:07:45,085 - INFO: SELECT * FROM game
+2026-02-23 13:07:45,086 - INFO: [raw sql] {}
+2026-02-23 13:07:45,248 - INFO: ROLLBACK
+2026-02-23 13:07:45,269 - INFO: BEGIN (implicit)
+2026-02-23 13:07:45,271 - INFO: DESCRIBE `nfl_data`.`SELECT * FROM nfl_facts`
+2026-02-23 13:07:45,271 - INFO: [raw sql] {}
+2026-02-23 13:07:45,274 - INFO: SELECT * FROM nfl_facts
+2026-02-23 13:07:45,274 - INFO: [raw sql] {}
+2026-02-23 13:07:45,660 - INFO: ROLLBACK
+2026-02-23 13:08:36,793 - INFO: BEGIN (implicit)
+2026-02-23 13:08:36,793 - INFO: DESCRIBE `nfl_data`.`SELECT * FROM team`
+2026-02-23 13:08:36,794 - INFO: [raw sql] {}
+2026-02-23 13:08:36,800 - INFO: SELECT * FROM team
+2026-02-23 13:08:36,800 - INFO: [raw sql] {}
+2026-02-23 13:08:36,803 - INFO: ROLLBACK
+2026-02-23 13:08:36,807 - INFO: BEGIN (implicit)
+2026-02-23 13:08:36,807 - INFO: DESCRIBE `nfl_data`.`SELECT * FROM season`
+2026-02-23 13:08:36,808 - INFO: [raw sql] {}
+2026-02-23 13:08:36,810 - INFO: SELECT * FROM season
+2026-02-23 13:08:36,810 - INFO: [raw sql] {}
+2026-02-23 13:08:36,812 - INFO: ROLLBACK
+2026-02-23 13:08:36,815 - INFO: BEGIN (implicit)
+2026-02-23 13:08:36,816 - INFO: DESCRIBE `nfl_data`.`SELECT * FROM game`
+2026-02-23 13:08:36,816 - INFO: [raw sql] {}
+2026-02-23 13:08:36,817 - INFO: SELECT * FROM game
+2026-02-23 13:08:36,818 - INFO: [raw sql] {}
+2026-02-23 13:08:36,959 - INFO: ROLLBACK
+2026-02-23 13:08:36,983 - INFO: BEGIN (implicit)
+2026-02-23 13:08:36,984 - INFO: DESCRIBE `nfl_data`.`SELECT * FROM nfl_facts`
+2026-02-23 13:08:36,984 - INFO: [raw sql] {}
+2026-02-23 13:08:36,988 - INFO: SELECT * FROM nfl_facts
+2026-02-23 13:08:36,989 - INFO: [raw sql] {}
+2026-02-23 13:08:37,500 - INFO: ROLLBACK
+2026-02-23 13:08:44,055 - INFO: BEGIN (implicit)
+2026-02-23 13:08:44,055 - INFO: DESCRIBE `nfl_data`.`SELECT * FROM team`
+2026-02-23 13:08:44,056 - INFO: [raw sql] {}
+2026-02-23 13:08:44,062 - INFO: SELECT * FROM team
+2026-02-23 13:08:44,062 - INFO: [raw sql] {}
+2026-02-23 13:08:44,064 - INFO: ROLLBACK
+2026-02-23 13:08:44,069 - INFO: BEGIN (implicit)
+2026-02-23 13:08:44,069 - INFO: DESCRIBE `nfl_data`.`SELECT * FROM season`
+2026-02-23 13:08:44,070 - INFO: [raw sql] {}
+2026-02-23 13:08:44,071 - INFO: SELECT * FROM season
+2026-02-23 13:08:44,072 - INFO: [raw sql] {}
+2026-02-23 13:08:44,074 - INFO: ROLLBACK
+2026-02-23 13:08:44,078 - INFO: BEGIN (implicit)
+2026-02-23 13:08:44,078 - INFO: DESCRIBE `nfl_data`.`SELECT * FROM game`
+2026-02-23 13:08:44,079 - INFO: [raw sql] {}
+2026-02-23 13:08:44,080 - INFO: SELECT * FROM game
+2026-02-23 13:08:44,081 - INFO: [raw sql] {}
+2026-02-23 13:08:44,216 - INFO: ROLLBACK
+2026-02-23 13:08:44,245 - INFO: BEGIN (implicit)
+2026-02-23 13:08:44,246 - INFO: DESCRIBE `nfl_data`.`SELECT * FROM nfl_facts`
+2026-02-23 13:08:44,247 - INFO: [raw sql] {}
+2026-02-23 13:08:44,248 - INFO: SELECT * FROM nfl_facts
+2026-02-23 13:08:44,249 - INFO: [raw sql] {}
+2026-02-23 13:08:44,703 - INFO: ROLLBACK
+2026-02-23 13:10:27,279 - DEBUG: %s finished extracting teams
+2026-02-23 13:10:27,280 - DEBUG: %s finished extracting {year} team stats
+2026-02-23 13:10:27,291 - DEBUG: %s finished extracting {year} schedule
+2026-02-23 13:10:27,309 - INFO: Validating columns | requested=4 | available=16
+2026-02-23 13:10:27,309 - INFO: Total columns chosen: 4
+2026-02-23 13:10:27,311 - INFO: Column validation complete | chosen_cols=4 | rejected_cols=12
+2026-02-23 13:10:27,312 - INFO: Validating columns | requested=6 | available=46
+2026-02-23 13:10:27,313 - INFO: Total columns chosen: 6
+2026-02-23 13:10:27,314 - INFO: Column validation complete | chosen_cols=6 | rejected_cols=40
+2026-02-23 13:10:27,476 - INFO: Validating columns | requested=15 | available=112
+2026-02-23 13:10:27,476 - INFO: Total columns chosen: 14
+2026-02-23 13:10:27,479 - INFO: Column validation complete | chosen_cols=14 | rejected_cols=98
+2026-02-23 13:10:27,491 - INFO: BEGIN (implicit)
+2026-02-23 13:10:27,492 - INFO: DESCRIBE `nfl_data`.`team`
+2026-02-23 13:10:27,493 - INFO: [raw sql] {}
+2026-02-23 13:10:27,499 - INFO: ROLLBACK
+2026-02-23 13:10:27,501 - INFO: Table 'team' already exists. Skipping creation.
+2026-02-23 13:10:27,502 - INFO: BEGIN (implicit)
+2026-02-23 13:10:27,503 - INFO: DESCRIBE `nfl_data`.`season`
+2026-02-23 13:10:27,504 - INFO: [raw sql] {}
+2026-02-23 13:10:27,507 - INFO: ROLLBACK
+2026-02-23 13:10:27,508 - INFO: Table 'season' already exists. Skipping creation.
+2026-02-23 13:10:27,510 - INFO: BEGIN (implicit)
+2026-02-23 13:10:27,510 - INFO: DESCRIBE `nfl_data`.`game`
+2026-02-23 13:10:27,510 - INFO: [raw sql] {}
+2026-02-23 13:10:27,514 - INFO: ROLLBACK
+2026-02-23 13:10:27,515 - INFO: Table 'game' already exists. Skipping creation.
+2026-02-23 13:10:27,517 - INFO: BEGIN (implicit)
+2026-02-23 13:10:27,517 - INFO: DESCRIBE `nfl_data`.`nfl_facts`
+2026-02-23 13:10:27,517 - INFO: [raw sql] {}
+2026-02-23 13:10:27,520 - INFO: ROLLBACK
+2026-02-23 13:10:27,521 - INFO: Table 'nfl_facts' already exists. Skipping creation.
+2026-02-23 13:10:27,522 - INFO: BEGIN (implicit)
+2026-02-23 13:10:27,523 - INFO: INSERT INTO team (`team_id`, `team_name`, `team_conf`, `team_division`)
+                    VALUES (%(team_id)s, %(team_name)s, %(team_conf)s, %(team_division)s)
+                    ON DUPLICATE KEY UPDATE `team_name`=VALUES(`team_name`), `team_conf`=VALUES(`team_conf`), `team_division`=VALUES(`team_division`);
+2026-02-23 13:10:27,524 - INFO: [cached since 164.8s ago] [{'team_id': 'ARI', 'team_name': 'Arizona Cardinals', 'team_conf': 'NFC', 'team_division': 'NFC West'}, {'team_id': 'ATL', 'team_name': 'Atlanta Falcons', 'team_conf': 'NFC', 'team_division': 'NFC South'}, {'team_id': 'BAL', 'team_name': 'Baltimore Ravens', 'team_conf': 'AFC', 'team_division': 'AFC North'}, {'team_id': 'BUF', 'team_name': 'Buffalo Bills', 'team_conf': 'AFC', 'team_division': 'AFC East'}, {'team_id': 'CAR', 'team_name': 'Carolina Panthers', 'team_conf': 'NFC', 'team_division': 'NFC South'}, {'team_id': 'CHI', 'team_name': 'Chicago Bears', 'team_conf': 'NFC', 'team_division': 'NFC North'}, {'team_id': 'CIN', 'team_name': 'Cincinnati Bengals', 'team_conf': 'AFC', 'team_division': 'AFC North'}, {'team_id': 'CLE', 'team_name': 'Cleveland Browns', 'team_conf': 'AFC', 'team_division': 'AFC North'}  ... displaying 10 of 32 total bound parameter sets ...  {'team_id': 'TEN', 'team_name': 'Tennessee Titans', 'team_conf': 'AFC', 'team_division': 'AFC South'}, {'team_id': 'WAS', 'team_name': 'Washington Commanders', 'team_conf': 'NFC', 'team_division': 'NFC East'}]
+2026-02-23 13:10:27,526 - INFO: COMMIT
+2026-02-23 13:10:27,527 - INFO: Inserted 32 rows into 'team' successfully.
+2026-02-23 13:10:27,529 - INFO: BEGIN (implicit)
+2026-02-23 13:10:27,530 - INFO: INSERT INTO season (`season_id`, `num_games`)
+                    VALUES (%(season_id)s, %(num_games)s)
+                    ON DUPLICATE KEY UPDATE `num_games`=VALUES(`num_games`);
+2026-02-23 13:10:27,530 - INFO: [cached since 164.8s ago] {'season_id': 2025, 'num_games': 17}
+2026-02-23 13:10:27,532 - INFO: COMMIT
+2026-02-23 13:10:27,533 - INFO: Inserted 1 rows into 'season' successfully.
+2026-02-23 13:10:27,538 - INFO: BEGIN (implicit)
+2026-02-23 13:10:27,545 - INFO: INSERT INTO game (`season_id`, `week`, `home_team`, `game_type`, `location`, `stadium`, `game_id`)
+                    VALUES (%(season_id)s, %(week)s, %(home_team)s, %(game_type)s, %(location)s, %(stadium)s, %(game_id)s)
+                    ON DUPLICATE KEY UPDATE `season_id`=VALUES(`season_id`), `week`=VALUES(`week`), `home_team`=VALUES(`home_team`), `game_type`=VALUES(`game_type`), `location`=VALUES(`location`), `stadium`=VALUES(`stadium`);
+2026-02-23 13:10:27,553 - INFO: [cached since 164.8s ago] [{'season_id': 2025, 'week': 1, 'home_team': 'PHI', 'game_type': 'REG', 'location': 'Home', 'stadium': 'Lincoln Financial Field', 'game_id': '2025_1_PHI'}, {'season_id': 2025, 'week': 1, 'home_team': 'LAC', 'game_type': 'REG', 'location': 'Neutral', 'stadium': 'SoFi Stadium', 'game_id': '2025_1_LAC'}, {'season_id': 2025, 'week': 1, 'home_team': 'ATL', 'game_type': 'REG', 'location': 'Home', 'stadium': 'Mercedes-Benz Stadium', 'game_id': '2025_1_ATL'}, {'season_id': 2025, 'week': 1, 'home_team': 'CLE', 'game_type': 'REG', 'location': 'Home', 'stadium': 'FirstEnergy Stadium', 'game_id': '2025_1_CLE'}, {'season_id': 2025, 'week': 1, 'home_team': 'IND', 'game_type': 'REG', 'location': 'Home', 'stadium': 'Lucas Oil Stadium', 'game_id': '2025_1_IND'}, {'season_id': 2025, 'week': 1, 'home_team': 'JAX', 'game_type': 'REG', 'location': 'Home', 'stadium': 'TIAA Bank Stadium', 'game_id': '2025_1_JAX'}, {'season_id': 2025, 'week': 1, 'home_team': 'NE', 'game_type': 'REG', 'location': 'Home', 'stadium': 'Gillette Stadium', 'game_id': '2025_1_NE'}, {'season_id': 2025, 'week': 1, 'home_team': 'NO', 'game_type': 'REG', 'location': 'Home', 'stadium': 'Mercedes-Benz Superdome', 'game_id': '2025_1_NO'}  ... displaying 10 of 285 total bound parameter sets ...  {'season_id': 2025, 'week': 21, 'home_team': 'SEA', 'game_type': 'CON', 'location': 'Home', 'stadium': 'Lumen Field', 'game_id': '2025_21_SEA'}, {'season_id': 2025, 'week': 22, 'home_team': 'NE', 'game_type': 'SB', 'location': 'Neutral', 'stadium': "Levi's Stadium", 'game_id': '2025_22_NE'}]
+2026-02-23 13:10:27,577 - INFO: COMMIT
+2026-02-23 13:10:27,583 - INFO: Inserted 285 rows into 'game' successfully.
+2026-02-23 13:10:27,594 - INFO: BEGIN (implicit)
+2026-02-23 13:10:27,609 - INFO: INSERT INTO nfl_facts (`season_id`, `team_id`, `game_id`, `week`, `game_type`, `pass_attempts`, `rush_attempts`, `pass_yards`, `rush_yards`, `pass_tds`, `rush_tds`, `points_scored`, `points_allowed`, `result`)
+                    VALUES (%(season_id)s, %(team_id)s, %(game_id)s, %(week)s, %(game_type)s, %(pass_attempts)s, %(rush_attempts)s, %(pass_yards)s, %(rush_yards)s, %(pass_tds)s, %(rush_tds)s, %(points_scored)s, %(points_allowed)s, %(result)s)
+                    ON DUPLICATE KEY UPDATE `season_id`=VALUES(`season_id`), `team_id`=VALUES(`team_id`), `week`=VALUES(`week`), `game_type`=VALUES(`game_type`), `pass_attempts`=VALUES(`pass_attempts`), `rush_attempts`=VALUES(`rush_attempts`), `pass_yards`=VALUES(`pass_yards`), `rush_yards`=VALUES(`rush_yards`), `pass_tds`=VALUES(`pass_tds`), `rush_tds`=VALUES(`rush_tds`), `points_scored`=VALUES(`points_scored`), `points_allowed`=VALUES(`points_allowed`), `result`=VALUES(`result`);
+2026-02-23 13:10:27,610 - INFO: [cached since 164.9s ago] [{'season_id': 2025, 'team_id': 'ARI', 'game_id': '2025_1_ARI', 'week': 1, 'game_type': 'REG', 'pass_attempts': 29, 'rush_attempts': 27, 'pass_yards': 163, 'rush_yards': 146, 'pass_tds': 2, 'rush_tds': 0, 'points_scored': 20, 'points_allowed': 13, 'result': 'W'}, {'season_id': 2025, 'team_id': 'ATL', 'game_id': '2025_1_ATL', 'week': 1, 'game_type': 'REG', 'pass_attempts': 42, 'rush_attempts': 28, 'pass_yards': 298, 'rush_yards': 69, 'pass_tds': 1, 'rush_tds': 1, 'points_scored': 20, 'points_allowed': 23, 'result': 'L'}, {'season_id': 2025, 'team_id': 'BAL', 'game_id': '2025_1_BAL', 'week': 1, 'game_type': 'REG', 'pass_attempts': 19, 'rush_attempts': 29, 'pass_yards': 209, 'rush_yards': 238, 'pass_tds': 2, 'rush_tds': 3, 'points_scored': 40, 'points_allowed': 41, 'result': 'L'}, {'season_id': 2025, 'team_id': 'BUF', 'game_id': '2025_1_BUF', 'week': 1, 'game_type': 'REG', 'pass_attempts': 46, 'rush_attempts': 31, 'pass_yards': 394, 'rush_yards': 108, 'pass_tds': 2, 'rush_tds': 3, 'points_scored': 41, 'points_allowed': 40, 'result': 'W'}, {'season_id': 2025, 'team_id': 'CAR', 'game_id': '2025_1_CAR', 'week': 1, 'game_type': 'REG', 'pass_attempts': 35, 'rush_attempts': 25, 'pass_yards': 154, 'rush_yards': 113, 'pass_tds': 1, 'rush_tds': 0, 'points_scored': 10, 'points_allowed': 26, 'result': 'L'}, {'season_id': 2025, 'team_id': 'CHI', 'game_id': '2025_1_CHI', 'week': 1, 'game_type': 'REG', 'pass_attempts': 35, 'rush_attempts': 26, 'pass_yards': 210, 'rush_yards': 119, 'pass_tds': 1, 'rush_tds': 1, 'points_scored': 24, 'points_allowed': 27, 'result': 'L'}, {'season_id': 2025, 'team_id': 'CIN', 'game_id': '2025_1_CIN', 'week': 1, 'game_type': 'REG', 'pass_attempts': 23, 'rush_attempts': 23, 'pass_yards': 113, 'rush_yards': 46, 'pass_tds': 1, 'rush_tds': 1, 'points_scored': 17, 'points_allowed': 16, 'result': 'W'}, {'season_id': 2025, 'team_id': 'CLE', 'game_id': '2025_1_CLE', 'week': 1, 'game_type': 'REG', 'pass_attempts': 45, 'rush_attempts': 24, 'pass_yards': 290, 'rush_yards': 49, 'pass_tds': 1, 'rush_tds': 1, 'points_scored': 16, 'points_allowed': 17, 'result': 'L'}  ... displaying 10 of 570 total bound parameter sets ...  {'season_id': 2025, 'team_id': 'NE', 'game_id': '2025_22_NE', 'week': 22, 'game_type': 'SB', 'pass_attempts': 43, 'rush_attempts': 18, 'pass_yards': 295, 'rush_yards': 79, 'pass_tds': 2, 'rush_tds': 0, 'points_scored': 13, 'points_allowed': 29, 'result': 'L'}, {'season_id': 2025, 'team_id': 'SEA', 'game_id': '2025_22_SEA', 'week': 22, 'game_type': 'SB', 'pass_attempts': 38, 'rush_attempts': 32, 'pass_yards': 202, 'rush_yards': 141, 'pass_tds': 1, 'rush_tds': 0, 'points_scored': 29, 'points_allowed': 13, 'result': 'W'}]
+2026-02-23 13:10:27,639 - INFO: COMMIT
+2026-02-23 13:10:27,640 - INFO: Inserted 570 rows into 'nfl_facts' successfully.
+2026-02-23 13:10:29,085 - INFO: BEGIN (implicit)
+2026-02-23 13:10:29,086 - INFO: DESCRIBE `nfl_data`.`SELECT * FROM team`
+2026-02-23 13:10:29,087 - INFO: [raw sql] {}
+2026-02-23 13:10:29,091 - INFO: SELECT * FROM team
+2026-02-23 13:10:29,092 - INFO: [raw sql] {}
+2026-02-23 13:10:29,098 - INFO: ROLLBACK
+2026-02-23 13:10:29,105 - INFO: BEGIN (implicit)
+2026-02-23 13:10:29,106 - INFO: DESCRIBE `nfl_data`.`SELECT * FROM season`
+2026-02-23 13:10:29,107 - INFO: [raw sql] {}
+2026-02-23 13:10:29,109 - INFO: SELECT * FROM season
+2026-02-23 13:10:29,110 - INFO: [raw sql] {}
+2026-02-23 13:10:29,114 - INFO: ROLLBACK
+2026-02-23 13:10:29,120 - INFO: BEGIN (implicit)
+2026-02-23 13:10:29,121 - INFO: DESCRIBE `nfl_data`.`SELECT * FROM game`
+2026-02-23 13:10:29,122 - INFO: [raw sql] {}
+2026-02-23 13:10:29,125 - INFO: SELECT * FROM game
+2026-02-23 13:10:29,127 - INFO: [raw sql] {}
+2026-02-23 13:10:29,299 - INFO: ROLLBACK
+2026-02-23 13:10:29,319 - INFO: BEGIN (implicit)
+2026-02-23 13:10:29,320 - INFO: DESCRIBE `nfl_data`.`SELECT * FROM nfl_facts`
+2026-02-23 13:10:29,322 - INFO: [raw sql] {}
+2026-02-23 13:10:29,323 - INFO: SELECT * FROM nfl_facts
+2026-02-23 13:10:29,324 - INFO: [raw sql] {}
+2026-02-23 13:10:29,672 - INFO: ROLLBACK
+2026-02-23 13:11:36,100 - INFO: BEGIN (implicit)
+2026-02-23 13:11:36,101 - INFO: DESCRIBE `nfl_data`.`SELECT * FROM team`
+2026-02-23 13:11:36,102 - INFO: [raw sql] {}
+2026-02-23 13:11:36,105 - INFO: SELECT * FROM team
+2026-02-23 13:11:36,106 - INFO: [raw sql] {}
+2026-02-23 13:11:36,112 - INFO: ROLLBACK
+2026-02-23 13:11:36,122 - INFO: BEGIN (implicit)
+2026-02-23 13:11:36,123 - INFO: DESCRIBE `nfl_data`.`SELECT * FROM season`
+2026-02-23 13:11:36,124 - INFO: [raw sql] {}
+2026-02-23 13:11:36,126 - INFO: SELECT * FROM season
+2026-02-23 13:11:36,126 - INFO: [raw sql] {}
+2026-02-23 13:11:36,130 - INFO: ROLLBACK
+2026-02-23 13:11:36,135 - INFO: BEGIN (implicit)
+2026-02-23 13:11:36,135 - INFO: DESCRIBE `nfl_data`.`SELECT * FROM game`
+2026-02-23 13:11:36,136 - INFO: [raw sql] {}
+2026-02-23 13:11:36,138 - INFO: SELECT * FROM game
+2026-02-23 13:11:36,139 - INFO: [raw sql] {}
+2026-02-23 13:11:36,350 - INFO: ROLLBACK
+2026-02-23 13:11:36,368 - INFO: BEGIN (implicit)
+2026-02-23 13:11:36,369 - INFO: DESCRIBE `nfl_data`.`SELECT * FROM nfl_facts`
+2026-02-23 13:11:36,370 - INFO: [raw sql] {}
+2026-02-23 13:11:36,372 - INFO: SELECT * FROM nfl_facts
+2026-02-23 13:11:36,373 - INFO: [raw sql] {}
+2026-02-23 13:11:36,669 - INFO: ROLLBACK
+2026-02-23 13:11:42,645 - INFO: BEGIN (implicit)
+2026-02-23 13:11:42,646 - INFO: DESCRIBE `nfl_data`.`SELECT * FROM team`
+2026-02-23 13:11:42,647 - INFO: [raw sql] {}
+2026-02-23 13:11:42,650 - INFO: SELECT * FROM team
+2026-02-23 13:11:42,651 - INFO: [raw sql] {}
+2026-02-23 13:11:42,656 - INFO: ROLLBACK
+2026-02-23 13:11:42,665 - INFO: BEGIN (implicit)
+2026-02-23 13:11:42,665 - INFO: DESCRIBE `nfl_data`.`SELECT * FROM season`
+2026-02-23 13:11:42,666 - INFO: [raw sql] {}
+2026-02-23 13:11:42,672 - INFO: SELECT * FROM season
+2026-02-23 13:11:42,673 - INFO: [raw sql] {}
+2026-02-23 13:11:42,678 - INFO: ROLLBACK
+2026-02-23 13:11:42,686 - INFO: BEGIN (implicit)
+2026-02-23 13:11:42,688 - INFO: DESCRIBE `nfl_data`.`SELECT * FROM game`
+2026-02-23 13:11:42,688 - INFO: [raw sql] {}
+2026-02-23 13:11:42,690 - INFO: SELECT * FROM game
+2026-02-23 13:11:42,691 - INFO: [raw sql] {}
+2026-02-23 13:11:42,853 - INFO: ROLLBACK
+2026-02-23 13:11:42,872 - INFO: BEGIN (implicit)
+2026-02-23 13:11:42,873 - INFO: DESCRIBE `nfl_data`.`SELECT * FROM nfl_facts`
+2026-02-23 13:11:42,873 - INFO: [raw sql] {}
+2026-02-23 13:11:42,874 - INFO: SELECT * FROM nfl_facts
+2026-02-23 13:11:42,875 - INFO: [raw sql] {}
+2026-02-23 13:11:43,214 - INFO: ROLLBACK
+>>>>>>> 3fff3194c146878cb25b3bd369fa64ba04c0352b
