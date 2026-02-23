@@ -74,7 +74,6 @@ with col1:
         load.insert_(df = cleaned_fact, table_name= 'nfl_facts', primary_key = 'game_id')
         loader.success("✅ Data Successfully Loaded!")
         st.session_state.updated = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        st.rerun()
 
 
 with col2:
@@ -124,7 +123,6 @@ with col2:
 
         loader.success("✅ Data Successfully Loaded!")
         st.session_state.updated = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        st.rerun()
 
 
 # FILE UPLOADERS
@@ -177,7 +175,6 @@ if uploaded_stats and uploaded_schedule and validate_schema(uploaded_stats, uplo
 
     loader.success("✅ Data Successfully Loaded!")
     st.session_state.updated = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    st.rerun()
 elif uploaded_stats and uploaded_schedule and validate_schema(uploaded_stats, uploaded_schedule) is not True:
     st.warning("Files not in correct format")
 

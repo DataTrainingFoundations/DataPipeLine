@@ -1,7 +1,6 @@
 # pylint: disable=import-error
 import streamlit as st
 import matplotlib.pyplot as plt
-import seaborn as sns
 import plotly.express as px
 import pandas as pd
 from src.extract.nflreadpy_extract import *
@@ -40,21 +39,25 @@ if st.session_state.updated is not None:
     st.text(f"Last updated: {st.session_state.updated}")
 
 # Querys for tables
+@st.cache_data
 def query_teams():
     with engine.connect() as connection:
         query = "SELECT * FROM team"
         result = pd.read_sql(query, connection)
         return result 
+@st.cache_data
 def query_seasons():
     with engine.connect() as connection:
         query = "SELECT * FROM season"
         result = pd.read_sql(query, connection)
         return result   
+@st.cache_data
 def query_games():
     with engine.connect() as connection:
         query = "SELECT * FROM game"
         result = pd.read_sql(query, connection)
         return result   
+@st.cache_data
 def query_nfl_facts():
     with engine.connect() as connection:
         query = "SELECT * FROM nfl_facts"
@@ -301,6 +304,7 @@ with tab1:
         st.session_state.game_table = game
     with table4:
         nfl_facts = query_nfl_facts()
+        print(nfl_facts)
         st.dataframe(nfl_facts, width = 'content')
         st.session_state.nfl_facts_table = nfl_facts
 
