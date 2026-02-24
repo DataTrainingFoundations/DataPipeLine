@@ -32,8 +32,10 @@ loader = st.empty()
 # Function to check if uploaded files are valid
 def validate_schema(stats_df: pd.DataFrame, schedule_df: pd.DataFrame):
     if st.session_state.stats_example is not None and st.session_state.schedule_example is not None:
-        stats_missing = [c for c in stats_df if c not in st.session_state.stats_example.columns]
-        schedule_missing = [c for c in schedule_df if c not in st.session_state.schedule_example.columns]
+        stats_missing = [c for c in stats_df.columns if c not in st.session_state.stats_example.columns]
+        schedule_missing = [c for c in schedule_df.columns if c not in st.session_state.schedule_example.columns]
+        print(schedule_missing)
+        print(stats_missing)
         return (len(stats_missing) == 0 and len(schedule_missing) == 0)
 
 if st.session_state.updated is not None:
@@ -143,7 +145,7 @@ uploaded_schedule = st.file_uploader(
 if (uploaded_stats and not uploaded_schedule) or (uploaded_schedule and not uploaded_stats):
     st.warning("Please upload BOTH stats and schedule files.")
 
-if uploaded_stats and uploaded_schedule and validate_schema(uploaded_stats, uploaded_schedule):
+if uploaded_stats and uploaded_schedule:
 
     # Extract data from csv's and upload data to database
     extract.success("📥 Extracting...")
@@ -153,36 +155,36 @@ if uploaded_stats and uploaded_schedule and validate_schema(uploaded_stats, uplo
     stats = DataExtractor.extract_data(uploaded_stats, uploaded_stats.name)
     schedule = DataExtractor.extract_data(uploaded_schedule, uploaded_schedule.name)
 
-    extract.empty()
-    transform.info("🔄 Transforming...")
-    time.sleep(1)
+    if validate_schema(stats, schedule):
+        extract.empty()
+        transform.info("🔄 Transforming...")
+        time.sleep(1)
 
-    # TRANSFROM DATA
-    game_table = fe_module.game_table(schedule)
-    season_table = fe_module.season_table(stats)
-    fact_table = fe_module.facts_table(stats_df = stats, schedule_df = schedule)
-    cleaned_fact = cleaning.Cleaning.clean(fact_table)
-    cleaned_season = cleaning.Cleaning.clean(season_table)
+        # TRANSFROM DATA
+        game_table = fe_module.game_table(schedule)
+        season_table = fe_module.season_table(stats)
+        fact_table = fe_module.facts_table(stats_df = stats, schedule_df = schedule)
+        cleaned_fact = cleaning.Cleaning.clean(fact_table)
+        cleaned_season = cleaning.Cleaning.clean(season_table)
 
-    transform.empty()
-    loader.warning("📤 Loading to Database...")
-    time.sleep(1)
-    
-    # LOAD DATA
-    load.create_(df = cleaned_season, table_name = 'season', primary_key = 'season_id')
-    load.create_(df = game_table, table_name = 'game', primary_key = 'game_id')
-    load.create_(df = cleaned_fact, table_name = 'nfl_facts', primary_key = 'game_id')
+        transform.empty()
+        loader.warning("📤 Loading to Database...")
+        time.sleep(1)
+        
+        # LOAD DATA
+        load.create_(df = cleaned_season, table_name = 'season', primary_key = 'season_id')
+        load.create_(df = game_table, table_name = 'game', primary_key = 'game_id')
+        load.create_(df = cleaned_fact, table_name = 'nfl_facts', primary_key = 'game_id')
 
-    load.insert_(df = cleaned_season, table_name= 'season', primary_key = 'season_id')
-    load.insert_(df = game_table, table_name= 'game', primary_key = 'game_id')
-    load.insert_(df = cleaned_fact, table_name= 'nfl_facts', primary_key = 'game_id')
+        load.insert_(df = cleaned_season, table_name= 'season', primary_key = 'season_id')
+        load.insert_(df = game_table, table_name= 'game', primary_key = 'game_id')
+        load.insert_(df = cleaned_fact, table_name= 'nfl_facts', primary_key = 'game_id')
 
-    loader.success("✅ Data Successfully Loaded!")
-    st.session_state.last_update = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    st.session_state.updated = True
-
-elif uploaded_stats and uploaded_schedule and validate_schema(uploaded_stats, uploaded_schedule) is not True:
-    st.warning("Files not in correct format")
+        loader.success("✅ Data Successfully Loaded!")
+        st.session_state.last_update = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        st.session_state.updated = True
+    elif validate_schema(stats, schedule) is not True:
+        st.warning("Files not in correct format")
 
 # Example files for upload
 tab1, tab2 = st.tabs(["team_stats", "schedule"])

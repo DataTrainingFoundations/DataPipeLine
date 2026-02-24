@@ -1,14 +1,10 @@
 # pylint: disable=import-error
 import streamlit as st
-import matplotlib.pyplot as plt
 import plotly.express as px
 import pandas as pd
-from src.extract.nflreadpy_extract import *
-from src.transform import cleaning, fe_module
 from src.load.load_module import DataLoader
 from src.load.load_module import get_engine
 from dotenv import load_dotenv
-from datetime import datetime
 import os
 
 # Get connection to database
@@ -265,6 +261,13 @@ def chart_builder(df, x_axis=None, compare = False):
                 size_max=18,
                 color_discrete_map=color_map,
                 hover_data=df.columns
+            )
+
+            fig.update_layout(
+                xaxis=dict(
+                    categoryorder="array",
+                    categoryarray=["Regular Season", "Playoffs", "Super Bowl"]
+                )
             )
         else:
             fig = px.scatter(
