@@ -311,28 +311,40 @@ with tab1:
     table1, table2, table3, table4 = st.tabs(['team_table', 'season_table', 'game_table', 'nfl_facts_table'])
     with table1:
         if st.session_state.updated:
-            team = query_teams()
-            st.dataframe(team, width = 'content')
-            st.session_state.team_table = team
-            st.session_updated = False
+            try:
+                team = query_teams()
+                st.dataframe(team, width = 'content')
+                st.session_state.team_table = team
+                st.session_updated = False
+            except Exception:
+                st.error("No team table found in database")
     with table2:
         if st.session_state.updated:
-            season = query_seasons()
-            st.dataframe(season, width = 'content')
-            st.session_state.season_table = season
-            st.session_updated = False
+            try:
+                season = query_seasons()
+                st.dataframe(season, width = 'content')
+                st.session_state.season_table = season
+                st.session_updated = False
+            except Exception:
+                st.error("No season table found in database")   
     with table3:
         if st.session_state.updated:
-            game = query_games()
-            st.dataframe(game, width = 'content')
-            st.session_state.game_table = game
-            st.session_updated = False
+            try:
+                game = query_games()
+                st.dataframe(game, width = 'content')
+                st.session_state.game_table = game
+                st.session_updated = False
+            except Exception:
+                st.error("No game table found in database")
     with table4:
         if st.session_state.updated:
-            nfl_facts = query_nfl_facts()
-            st.dataframe(nfl_facts, width = 'content')
-            st.session_state.nfl_facts_table = nfl_facts
-            st.session_updated = False
+            try:
+                nfl_facts = query_nfl_facts()
+                st.dataframe(nfl_facts, width = 'content')
+                st.session_state.nfl_facts_table = nfl_facts
+                st.session_updated = False
+            except Exception:
+                st.error("No nfl_facts table found in database")
 
 with tab2:
     col1, col2 = st.columns([3, 1], border = True)
